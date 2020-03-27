@@ -1,0 +1,43 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "fr.sortyquizz",
+      "nativeLanguage": "en"
+    },
+    "jhipsterVersion": "6.8.0",
+    "applicationType": "monolith",
+    "baseName": "sortyquizz",
+    "packageName": "fr.sortyquizz",
+    "packageFolder": "fr/sortyquizz",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "hazelcast",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Disk",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "ZDZjYjhlNmJlMjU2NjU5ODE0ZjI0ZGE0NGU0MDI3NzQ2M2NiYjMwZTM0NjM5ZmNiZTE4MGU2OGZiMWVkMWRmYjM1ZDQzYjVlNjdiYThhNjkxZTM5MjA4MWRhZjMzZGZlYjhjMDkwOGY1NjQ1ZmVkNTk2ZGEwNmFlMGQ2M2VkMTM=",
+    "embeddableLaunchScript": false,
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "clientFramework": "angularX",
+    "clientTheme": "materia",
+    "clientThemeVariant": "primary",
+    "creationTimestamp": 1585322101992,
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": true,
+    "nativeLanguage": "en",
+    "languages": ["en", "fr"],
+    "blueprints": []
+  }
+}

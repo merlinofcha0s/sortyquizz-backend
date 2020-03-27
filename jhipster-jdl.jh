@@ -1,0 +1,37 @@
+entity Profile {
+	level String required
+}
+
+entity Card {
+	name String required,
+    level Integer required,
+    picture Blob required,
+    order Integer required
+}
+
+entity Pack {
+	name String required,
+    category String required
+}
+
+entity Question {
+	question String required,
+    level Integer required
+}
+
+entity Answer {
+	answer String required,
+    order Integer required
+}
+
+relationship ManyToMany {
+	Card{profile(name)} to Profile{card}
+}
+
+relationship OneToMany {
+	Pack{question} to Question,
+    Pack{card} to Card,
+    Question{answer} to Answer
+}
+
+paginate Profile, Card, Pack, Question, Answer with infinite-scroll
