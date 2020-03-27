@@ -1,0 +1,57 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="card">
+            <h2><span jhiTranslate="sortyquizzApp.card.detail.title">Card</span> {{ card.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="sortyquizzApp.card.name">Name</span></dt>
+                <dd>
+                    <span>{{ card.name }}</span>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.card.level">Level</span></dt>
+                <dd>
+                    <span>{{ card.level }}</span>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.card.picture">Picture</span></dt>
+                <dd>
+                    <div *ngIf="card.picture">
+                        <a (click)="openFile(card?.pictureContentType!, card?.picture)" jhiTranslate="entity.action.open">open</a>
+                        {{ card.pictureContentType }}, {{ byteSize(card.picture) }}
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.card.order">Order</span></dt>
+                <dd>
+                    <span>{{ card.order }}</span>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.card.profile">Profile</span></dt>
+                <dd>
+                    <span *ngFor="let profile of card.profiles; let last = last">
+                        <a [routerLink]="['/profile', profile?.id, 'view']">{{ profile.name }}</a>{{ last ? '' : ', ' }}
+                    </span>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.card.pack">Pack</span></dt>
+                <dd>
+                    <div *ngIf="card.pack">
+                        <a [routerLink]="['/pack', card.pack?.id, 'view']">{{ card.pack?.id }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/card', card.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

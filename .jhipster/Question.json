@@ -1,0 +1,45 @@
+{
+    "name": "Question",
+    "fields": [
+        {
+            "fieldName": "question",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "level",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "answer",
+            "otherEntityRelationshipName": "question",
+            "relationshipName": "answer"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "pack",
+            "otherEntityRelationshipName": "question",
+            "relationshipName": "pack",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20200327154200",
+    "entityTableName": "question",
+    "dto": "no",
+    "pagination": "infinite-scroll",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "readOnly": false,
+    "embedded": false,
+    "clientRootFolder": "",
+    "applications": "*"
+}

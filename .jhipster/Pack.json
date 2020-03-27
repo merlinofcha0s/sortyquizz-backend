@@ -1,0 +1,44 @@
+{
+    "name": "Pack",
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "category",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "question",
+            "otherEntityRelationshipName": "pack",
+            "relationshipName": "question"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "card",
+            "otherEntityRelationshipName": "pack",
+            "relationshipName": "card"
+        }
+    ],
+    "changelogDate": "20200327154100",
+    "entityTableName": "pack",
+    "dto": "no",
+    "pagination": "infinite-scroll",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "readOnly": false,
+    "embedded": false,
+    "clientRootFolder": "",
+    "applications": "*"
+}

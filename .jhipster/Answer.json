@@ -1,0 +1,39 @@
+{
+    "name": "Answer",
+    "fields": [
+        {
+            "fieldName": "answer",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "order",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "question",
+            "otherEntityRelationshipName": "answer",
+            "relationshipName": "question",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20200327154300",
+    "entityTableName": "answer",
+    "dto": "no",
+    "pagination": "infinite-scroll",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "readOnly": false,
+    "embedded": false,
+    "clientRootFolder": "",
+    "applications": "*"
+}
