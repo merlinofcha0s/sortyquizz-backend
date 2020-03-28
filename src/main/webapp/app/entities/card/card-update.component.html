@@ -89,9 +89,9 @@
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="sortyquizzApp.card.pack" for="field_pack">Pack</label>
-                    <select class="form-control" id="field_pack" name="pack" formControlName="pack">
+                    <select class="form-control" id="field_pack" name="pack" formControlName="packId">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="packOption.id === editForm.get('pack')!.value?.id ? editForm.get('pack')!.value : packOption" *ngFor="let packOption of packs; trackBy: trackById">{{ packOption.id }}</option>
+                        <option [ngValue]="packOption.id" *ngFor="let packOption of packs; trackBy: trackById">{{ packOption.id }}</option>
                     </select>
                 </div>
             </div>

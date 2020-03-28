@@ -1,8 +1,8 @@
 package fr.sortyquizz.web.rest;
 
-import fr.sortyquizz.domain.Profile;
-import fr.sortyquizz.repository.ProfileRepository;
+import fr.sortyquizz.service.ProfileService;
 import fr.sortyquizz.web.rest.errors.BadRequestAlertException;
+import fr.sortyquizz.service.dto.ProfileDTO;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -16,7 +16,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -30,7 +29,6 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class ProfileResource {
 
     private final Logger log = LoggerFactory.getLogger(ProfileResource.class);
@@ -40,26 +38,26 @@ public class ProfileResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final ProfileRepository profileRepository;
+    private final ProfileService profileService;
 
-    public ProfileResource(ProfileRepository profileRepository) {
-        this.profileRepository = profileRepository;
+    public ProfileResource(ProfileService profileService) {
+        this.profileService = profileService;
     }
 
     /**
      * {@code POST  /profiles} : Create a new profile.
      *
-     * @param profile the profile to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new profile, or with status {@code 400 (Bad Request)} if the profile has already an ID.
+     * @param profileDTO the profileDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new profileDTO, or with status {@code 400 (Bad Request)} if the profile has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/profiles")
-    public ResponseEntity<Profile> createProfile(@Valid @RequestBody Profile profile) throws URISyntaxException {
-        log.debug("REST request to save Profile : {}", profile);
-        if (profile.getId() != null) {
+    public ResponseEntity<ProfileDTO> createProfile(@Valid @RequestBody ProfileDTO profileDTO) throws URISyntaxException {
+        log.debug("REST request to save Profile : {}", profileDTO);
+        if (profileDTO.getId() != null) {
             throw new BadRequestAlertException("A new profile cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Profile result = profileRepository.save(profile);
+        ProfileDTO result = profileService.save(profileDTO);
         return ResponseEntity.created(new URI("/api/profiles/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -68,21 +66,21 @@ public class ProfileResource {
     /**
      * {@code PUT  /profiles} : Updates an existing profile.
      *
-     * @param profile the profile to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated profile,
-     * or with status {@code 400 (Bad Request)} if the profile is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the profile couldn't be updated.
+     * @param profileDTO the profileDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated profileDTO,
+     * or with status {@code 400 (Bad Request)} if the profileDTO is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the profileDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/profiles")
-    public ResponseEntity<Profile> updateProfile(@Valid @RequestBody Profile profile) throws URISyntaxException {
-        log.debug("REST request to update Profile : {}", profile);
-        if (profile.getId() == null) {
+    public ResponseEntity<ProfileDTO> updateProfile(@Valid @RequestBody ProfileDTO profileDTO) throws URISyntaxException {
+        log.debug("REST request to update Profile : {}", profileDTO);
+        if (profileDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Profile result = profileRepository.save(profile);
+        ProfileDTO result = profileService.save(profileDTO);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, profile.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, profileDTO.getId().toString()))
             .body(result);
     }
 
@@ -93,9 +91,9 @@ public class ProfileResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of profiles in body.
      */
     @GetMapping("/profiles")
-    public ResponseEntity<List<Profile>> getAllProfiles(Pageable pageable) {
+    public ResponseEntity<List<ProfileDTO>> getAllProfiles(Pageable pageable) {
         log.debug("REST request to get a page of Profiles");
-        Page<Profile> page = profileRepository.findAll(pageable);
+        Page<ProfileDTO> page = profileService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -103,26 +101,26 @@ public class ProfileResource {
     /**
      * {@code GET  /profiles/:id} : get the "id" profile.
      *
-     * @param id the id of the profile to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the profile, or with status {@code 404 (Not Found)}.
+     * @param id the id of the profileDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the profileDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/profiles/{id}")
-    public ResponseEntity<Profile> getProfile(@PathVariable Long id) {
+    public ResponseEntity<ProfileDTO> getProfile(@PathVariable Long id) {
         log.debug("REST request to get Profile : {}", id);
-        Optional<Profile> profile = profileRepository.findById(id);
-        return ResponseUtil.wrapOrNotFound(profile);
+        Optional<ProfileDTO> profileDTO = profileService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(profileDTO);
     }
 
     /**
      * {@code DELETE  /profiles/:id} : delete the "id" profile.
      *
-     * @param id the id of the profile to delete.
+     * @param id the id of the profileDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/profiles/{id}")
     public ResponseEntity<Void> deleteProfile(@PathVariable Long id) {
         log.debug("REST request to delete Profile : {}", id);
-        profileRepository.deleteById(id);
+        profileService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
 }

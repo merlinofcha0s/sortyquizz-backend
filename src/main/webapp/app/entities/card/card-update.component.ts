@@ -33,7 +33,7 @@ export class CardUpdateComponent implements OnInit {
     pictureContentType: [],
     order: [null, [Validators.required]],
     profiles: [],
-    pack: []
+    packId: []
   });
 
   constructor(
@@ -65,7 +65,7 @@ export class CardUpdateComponent implements OnInit {
       pictureContentType: card.pictureContentType,
       order: card.order,
       profiles: card.profiles,
-      pack: card.pack
+      packId: card.packId
     });
   }
 
@@ -109,7 +109,7 @@ export class CardUpdateComponent implements OnInit {
       picture: this.editForm.get(['picture'])!.value,
       order: this.editForm.get(['order'])!.value,
       profiles: this.editForm.get(['profiles'])!.value,
-      pack: this.editForm.get(['pack'])!.value
+      packId: this.editForm.get(['packId'])!.value
     };
   }
 

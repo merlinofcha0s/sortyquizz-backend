@@ -25,7 +25,7 @@
                     <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="question"><span jhiTranslate="sortyquizzApp.question.question">Question</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="level"><span jhiTranslate="sortyquizzApp.question.level">Level</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="pack.id"><span jhiTranslate="sortyquizzApp.question.pack">Pack</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="packId"><span jhiTranslate="sortyquizzApp.question.pack">Pack</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -35,8 +35,8 @@
                     <td>{{ question.question }}</td>
                     <td>{{ question.level }}</td>
                     <td>
-                        <div *ngIf="question.pack">
-                            <a [routerLink]="['/pack', question.pack?.id, 'view']" >{{ question.pack?.id }}</a>
+                        <div *ngIf="question.packId">
+                            <a [routerLink]="['/pack', question.packId , 'view']" >{{ question.packId }}</a>
                         </div>
                     </td>
                     <td class="text-right">

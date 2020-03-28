@@ -22,7 +22,7 @@ export class QuestionUpdateComponent implements OnInit {
     id: [],
     question: [null, [Validators.required]],
     level: [null, [Validators.required]],
-    pack: []
+    packId: []
   });
 
   constructor(
@@ -45,7 +45,7 @@ export class QuestionUpdateComponent implements OnInit {
       id: question.id,
       question: question.question,
       level: question.level,
-      pack: question.pack
+      packId: question.packId
     });
   }
 
@@ -69,7 +69,7 @@ export class QuestionUpdateComponent implements OnInit {
       id: this.editForm.get(['id'])!.value,
       question: this.editForm.get(['question'])!.value,
       level: this.editForm.get(['level'])!.value,
-      pack: this.editForm.get(['pack'])!.value
+      packId: this.editForm.get(['packId'])!.value
     };
   }
 

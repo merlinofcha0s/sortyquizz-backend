@@ -3,6 +3,9 @@ package fr.sortyquizz.web.rest;
 import fr.sortyquizz.SortyquizzApp;
 import fr.sortyquizz.domain.Profile;
 import fr.sortyquizz.repository.ProfileRepository;
+import fr.sortyquizz.service.ProfileService;
+import fr.sortyquizz.service.dto.ProfileDTO;
+import fr.sortyquizz.service.mapper.ProfileMapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,6 +38,12 @@ public class ProfileResourceIT {
 
     @Autowired
     private ProfileRepository profileRepository;
+
+    @Autowired
+    private ProfileMapper profileMapper;
+
+    @Autowired
+    private ProfileService profileService;
 
     @Autowired
     private EntityManager em;
@@ -78,9 +87,10 @@ public class ProfileResourceIT {
         int databaseSizeBeforeCreate = profileRepository.findAll().size();
 
         // Create the Profile
+        ProfileDTO profileDTO = profileMapper.toDto(profile);
         restProfileMockMvc.perform(post("/api/profiles")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(profile)))
+            .content(TestUtil.convertObjectToJsonBytes(profileDTO)))
             .andExpect(status().isCreated());
 
         // Validate the Profile in the database
@@ -97,11 +107,12 @@ public class ProfileResourceIT {
 
         // Create the Profile with an existing ID
         profile.setId(1L);
+        ProfileDTO profileDTO = profileMapper.toDto(profile);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restProfileMockMvc.perform(post("/api/profiles")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(profile)))
+            .content(TestUtil.convertObjectToJsonBytes(profileDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Profile in the database
@@ -118,10 +129,11 @@ public class ProfileResourceIT {
         profile.setLevel(null);
 
         // Create the Profile, which fails.
+        ProfileDTO profileDTO = profileMapper.toDto(profile);
 
         restProfileMockMvc.perform(post("/api/profiles")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(profile)))
+            .content(TestUtil.convertObjectToJsonBytes(profileDTO)))
             .andExpect(status().isBadRequest());
 
         List<Profile> profileList = profileRepository.findAll();
@@ -178,10 +190,11 @@ public class ProfileResourceIT {
         em.detach(updatedProfile);
         updatedProfile
             .level(UPDATED_LEVEL);
+        ProfileDTO profileDTO = profileMapper.toDto(updatedProfile);
 
         restProfileMockMvc.perform(put("/api/profiles")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedProfile)))
+            .content(TestUtil.convertObjectToJsonBytes(profileDTO)))
             .andExpect(status().isOk());
 
         // Validate the Profile in the database
@@ -197,11 +210,12 @@ public class ProfileResourceIT {
         int databaseSizeBeforeUpdate = profileRepository.findAll().size();
 
         // Create the Profile
+        ProfileDTO profileDTO = profileMapper.toDto(profile);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restProfileMockMvc.perform(put("/api/profiles")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(profile)))
+            .content(TestUtil.convertObjectToJsonBytes(profileDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Profile in the database

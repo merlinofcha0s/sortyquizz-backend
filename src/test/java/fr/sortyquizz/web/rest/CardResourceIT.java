@@ -3,6 +3,9 @@ package fr.sortyquizz.web.rest;
 import fr.sortyquizz.SortyquizzApp;
 import fr.sortyquizz.domain.Card;
 import fr.sortyquizz.repository.CardRepository;
+import fr.sortyquizz.service.CardService;
+import fr.sortyquizz.service.dto.CardDTO;
+import fr.sortyquizz.service.mapper.CardMapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,6 +62,15 @@ public class CardResourceIT {
     private CardRepository cardRepositoryMock;
 
     @Autowired
+    private CardMapper cardMapper;
+
+    @Mock
+    private CardService cardServiceMock;
+
+    @Autowired
+    private CardService cardService;
+
+    @Autowired
     private EntityManager em;
 
     @Autowired
@@ -108,9 +120,10 @@ public class CardResourceIT {
         int databaseSizeBeforeCreate = cardRepository.findAll().size();
 
         // Create the Card
+        CardDTO cardDTO = cardMapper.toDto(card);
         restCardMockMvc.perform(post("/api/cards")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(card)))
+            .content(TestUtil.convertObjectToJsonBytes(cardDTO)))
             .andExpect(status().isCreated());
 
         // Validate the Card in the database
@@ -131,11 +144,12 @@ public class CardResourceIT {
 
         // Create the Card with an existing ID
         card.setId(1L);
+        CardDTO cardDTO = cardMapper.toDto(card);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restCardMockMvc.perform(post("/api/cards")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(card)))
+            .content(TestUtil.convertObjectToJsonBytes(cardDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Card in the database
@@ -152,10 +166,11 @@ public class CardResourceIT {
         card.setName(null);
 
         // Create the Card, which fails.
+        CardDTO cardDTO = cardMapper.toDto(card);
 
         restCardMockMvc.perform(post("/api/cards")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(card)))
+            .content(TestUtil.convertObjectToJsonBytes(cardDTO)))
             .andExpect(status().isBadRequest());
 
         List<Card> cardList = cardRepository.findAll();
@@ -170,10 +185,11 @@ public class CardResourceIT {
         card.setLevel(null);
 
         // Create the Card, which fails.
+        CardDTO cardDTO = cardMapper.toDto(card);
 
         restCardMockMvc.perform(post("/api/cards")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(card)))
+            .content(TestUtil.convertObjectToJsonBytes(cardDTO)))
             .andExpect(status().isBadRequest());
 
         List<Card> cardList = cardRepository.findAll();
@@ -188,10 +204,11 @@ public class CardResourceIT {
         card.setOrder(null);
 
         // Create the Card, which fails.
+        CardDTO cardDTO = cardMapper.toDto(card);
 
         restCardMockMvc.perform(post("/api/cards")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(card)))
+            .content(TestUtil.convertObjectToJsonBytes(cardDTO)))
             .andExpect(status().isBadRequest());
 
         List<Card> cardList = cardRepository.findAll();
@@ -218,24 +235,22 @@ public class CardResourceIT {
     
     @SuppressWarnings({"unchecked"})
     public void getAllCardsWithEagerRelationshipsIsEnabled() throws Exception {
-        CardResource cardResource = new CardResource(cardRepositoryMock);
-        when(cardRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+        when(cardServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         restCardMockMvc.perform(get("/api/cards?eagerload=true"))
             .andExpect(status().isOk());
 
-        verify(cardRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+        verify(cardServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @SuppressWarnings({"unchecked"})
     public void getAllCardsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        CardResource cardResource = new CardResource(cardRepositoryMock);
-        when(cardRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+        when(cardServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         restCardMockMvc.perform(get("/api/cards?eagerload=true"))
             .andExpect(status().isOk());
 
-        verify(cardRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+        verify(cardServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
@@ -282,10 +297,11 @@ public class CardResourceIT {
             .picture(UPDATED_PICTURE)
             .pictureContentType(UPDATED_PICTURE_CONTENT_TYPE)
             .order(UPDATED_ORDER);
+        CardDTO cardDTO = cardMapper.toDto(updatedCard);
 
         restCardMockMvc.perform(put("/api/cards")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedCard)))
+            .content(TestUtil.convertObjectToJsonBytes(cardDTO)))
             .andExpect(status().isOk());
 
         // Validate the Card in the database
@@ -305,11 +321,12 @@ public class CardResourceIT {
         int databaseSizeBeforeUpdate = cardRepository.findAll().size();
 
         // Create the Card
+        CardDTO cardDTO = cardMapper.toDto(card);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restCardMockMvc.perform(put("/api/cards")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(card)))
+            .content(TestUtil.convertObjectToJsonBytes(cardDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Card in the database

@@ -1,5 +1,4 @@
 import { IProfile } from 'app/shared/model/profile.model';
-import { IPack } from 'app/shared/model/pack.model';
 
 export interface ICard {
   id?: number;
@@ -9,7 +8,7 @@ export interface ICard {
   picture?: any;
   order?: number;
   profiles?: IProfile[];
-  pack?: IPack;
+  packId?: number;
 }
 
 export class Card implements ICard {
@@ -21,6 +20,6 @@ export class Card implements ICard {
     public picture?: any,
     public order?: number,
     public profiles?: IProfile[],
-    public pack?: IPack
+    public packId?: number
   ) {}
 }

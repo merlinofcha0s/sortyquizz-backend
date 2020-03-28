@@ -27,7 +27,7 @@
                     <th scope="col"  jhiSortBy="level"><span jhiTranslate="sortyquizzApp.card.level">Level</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="picture"><span jhiTranslate="sortyquizzApp.card.picture">Picture</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="order"><span jhiTranslate="sortyquizzApp.card.order">Order</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="pack.id"><span jhiTranslate="sortyquizzApp.card.pack">Pack</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="packId"><span jhiTranslate="sortyquizzApp.card.pack">Pack</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -42,8 +42,8 @@
                     </td>
                     <td>{{ card.order }}</td>
                     <td>
-                        <div *ngIf="card.pack">
-                            <a [routerLink]="['/pack', card.pack?.id, 'view']" >{{ card.pack?.id }}</a>
+                        <div *ngIf="card.packId">
+                            <a [routerLink]="['/pack', card.packId , 'view']" >{{ card.packId }}</a>
                         </div>
                     </td>
                     <td class="text-right">

@@ -18,8 +18,8 @@
                 </dd>
                 <dt><span jhiTranslate="sortyquizzApp.question.pack">Pack</span></dt>
                 <dd>
-                    <div *ngIf="question.pack">
-                        <a [routerLink]="['/pack', question.pack?.id, 'view']">{{ question.pack?.id }}</a>
+                    <div *ngIf="question.packId">
+                        <a [routerLink]="['/pack', question.packId, 'view']">{{ question.packId }}</a>
                     </div>
                 </dd>
             </dl>

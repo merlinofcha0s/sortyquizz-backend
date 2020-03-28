@@ -3,6 +3,9 @@ package fr.sortyquizz.web.rest;
 import fr.sortyquizz.SortyquizzApp;
 import fr.sortyquizz.domain.Question;
 import fr.sortyquizz.repository.QuestionRepository;
+import fr.sortyquizz.service.QuestionService;
+import fr.sortyquizz.service.dto.QuestionDTO;
+import fr.sortyquizz.service.mapper.QuestionMapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,6 +41,12 @@ public class QuestionResourceIT {
 
     @Autowired
     private QuestionRepository questionRepository;
+
+    @Autowired
+    private QuestionMapper questionMapper;
+
+    @Autowired
+    private QuestionService questionService;
 
     @Autowired
     private EntityManager em;
@@ -83,9 +92,10 @@ public class QuestionResourceIT {
         int databaseSizeBeforeCreate = questionRepository.findAll().size();
 
         // Create the Question
+        QuestionDTO questionDTO = questionMapper.toDto(question);
         restQuestionMockMvc.perform(post("/api/questions")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(question)))
+            .content(TestUtil.convertObjectToJsonBytes(questionDTO)))
             .andExpect(status().isCreated());
 
         // Validate the Question in the database
@@ -103,11 +113,12 @@ public class QuestionResourceIT {
 
         // Create the Question with an existing ID
         question.setId(1L);
+        QuestionDTO questionDTO = questionMapper.toDto(question);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restQuestionMockMvc.perform(post("/api/questions")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(question)))
+            .content(TestUtil.convertObjectToJsonBytes(questionDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Question in the database
@@ -124,10 +135,11 @@ public class QuestionResourceIT {
         question.setQuestion(null);
 
         // Create the Question, which fails.
+        QuestionDTO questionDTO = questionMapper.toDto(question);
 
         restQuestionMockMvc.perform(post("/api/questions")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(question)))
+            .content(TestUtil.convertObjectToJsonBytes(questionDTO)))
             .andExpect(status().isBadRequest());
 
         List<Question> questionList = questionRepository.findAll();
@@ -142,10 +154,11 @@ public class QuestionResourceIT {
         question.setLevel(null);
 
         // Create the Question, which fails.
+        QuestionDTO questionDTO = questionMapper.toDto(question);
 
         restQuestionMockMvc.perform(post("/api/questions")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(question)))
+            .content(TestUtil.convertObjectToJsonBytes(questionDTO)))
             .andExpect(status().isBadRequest());
 
         List<Question> questionList = questionRepository.findAll();
@@ -205,10 +218,11 @@ public class QuestionResourceIT {
         updatedQuestion
             .question(UPDATED_QUESTION)
             .level(UPDATED_LEVEL);
+        QuestionDTO questionDTO = questionMapper.toDto(updatedQuestion);
 
         restQuestionMockMvc.perform(put("/api/questions")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedQuestion)))
+            .content(TestUtil.convertObjectToJsonBytes(questionDTO)))
             .andExpect(status().isOk());
 
         // Validate the Question in the database
@@ -225,11 +239,12 @@ public class QuestionResourceIT {
         int databaseSizeBeforeUpdate = questionRepository.findAll().size();
 
         // Create the Question
+        QuestionDTO questionDTO = questionMapper.toDto(question);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restQuestionMockMvc.perform(put("/api/questions")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(question)))
+            .content(TestUtil.convertObjectToJsonBytes(questionDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Question in the database

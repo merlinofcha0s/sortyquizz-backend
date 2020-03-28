@@ -22,7 +22,7 @@ export class AnswerUpdateComponent implements OnInit {
     id: [],
     answer: [null, [Validators.required]],
     order: [null, [Validators.required]],
-    question: []
+    questionId: []
   });
 
   constructor(
@@ -45,7 +45,7 @@ export class AnswerUpdateComponent implements OnInit {
       id: answer.id,
       answer: answer.answer,
       order: answer.order,
-      question: answer.question
+      questionId: answer.questionId
     });
   }
 
@@ -69,7 +69,7 @@ export class AnswerUpdateComponent implements OnInit {
       id: this.editForm.get(['id'])!.value,
       answer: this.editForm.get(['answer'])!.value,
       order: this.editForm.get(['order'])!.value,
-      question: this.editForm.get(['question'])!.value
+      questionId: this.editForm.get(['questionId'])!.value
     };
   }
 

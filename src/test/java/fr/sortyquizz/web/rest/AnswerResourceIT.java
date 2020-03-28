@@ -3,6 +3,9 @@ package fr.sortyquizz.web.rest;
 import fr.sortyquizz.SortyquizzApp;
 import fr.sortyquizz.domain.Answer;
 import fr.sortyquizz.repository.AnswerRepository;
+import fr.sortyquizz.service.AnswerService;
+import fr.sortyquizz.service.dto.AnswerDTO;
+import fr.sortyquizz.service.mapper.AnswerMapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,6 +41,12 @@ public class AnswerResourceIT {
 
     @Autowired
     private AnswerRepository answerRepository;
+
+    @Autowired
+    private AnswerMapper answerMapper;
+
+    @Autowired
+    private AnswerService answerService;
 
     @Autowired
     private EntityManager em;
@@ -83,9 +92,10 @@ public class AnswerResourceIT {
         int databaseSizeBeforeCreate = answerRepository.findAll().size();
 
         // Create the Answer
+        AnswerDTO answerDTO = answerMapper.toDto(answer);
         restAnswerMockMvc.perform(post("/api/answers")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(answer)))
+            .content(TestUtil.convertObjectToJsonBytes(answerDTO)))
             .andExpect(status().isCreated());
 
         // Validate the Answer in the database
@@ -103,11 +113,12 @@ public class AnswerResourceIT {
 
         // Create the Answer with an existing ID
         answer.setId(1L);
+        AnswerDTO answerDTO = answerMapper.toDto(answer);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restAnswerMockMvc.perform(post("/api/answers")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(answer)))
+            .content(TestUtil.convertObjectToJsonBytes(answerDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Answer in the database
@@ -124,10 +135,11 @@ public class AnswerResourceIT {
         answer.setAnswer(null);
 
         // Create the Answer, which fails.
+        AnswerDTO answerDTO = answerMapper.toDto(answer);
 
         restAnswerMockMvc.perform(post("/api/answers")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(answer)))
+            .content(TestUtil.convertObjectToJsonBytes(answerDTO)))
             .andExpect(status().isBadRequest());
 
         List<Answer> answerList = answerRepository.findAll();
@@ -142,10 +154,11 @@ public class AnswerResourceIT {
         answer.setOrder(null);
 
         // Create the Answer, which fails.
+        AnswerDTO answerDTO = answerMapper.toDto(answer);
 
         restAnswerMockMvc.perform(post("/api/answers")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(answer)))
+            .content(TestUtil.convertObjectToJsonBytes(answerDTO)))
             .andExpect(status().isBadRequest());
 
         List<Answer> answerList = answerRepository.findAll();
@@ -205,10 +218,11 @@ public class AnswerResourceIT {
         updatedAnswer
             .answer(UPDATED_ANSWER)
             .order(UPDATED_ORDER);
+        AnswerDTO answerDTO = answerMapper.toDto(updatedAnswer);
 
         restAnswerMockMvc.perform(put("/api/answers")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedAnswer)))
+            .content(TestUtil.convertObjectToJsonBytes(answerDTO)))
             .andExpect(status().isOk());
 
         // Validate the Answer in the database
@@ -225,11 +239,12 @@ public class AnswerResourceIT {
         int databaseSizeBeforeUpdate = answerRepository.findAll().size();
 
         // Create the Answer
+        AnswerDTO answerDTO = answerMapper.toDto(answer);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restAnswerMockMvc.perform(put("/api/answers")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(answer)))
+            .content(TestUtil.convertObjectToJsonBytes(answerDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Answer in the database

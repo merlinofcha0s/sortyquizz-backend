@@ -34,4 +34,6 @@ relationship OneToMany {
     Question{answer} to Answer
 }
 
-paginate Profile, Card, Pack, Question, Answer with infinite-scroll
+paginate * with infinite-scroll
+dto * with mapstruct
+service * with serviceClass
