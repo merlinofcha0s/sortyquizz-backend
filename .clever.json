@@ -1,0 +1,11 @@
+{
+  "apps": [
+    {
+      "app_id": "app_2c1568e3-a7f2-49bb-ab6d-666b8779a09d",
+      "org_id": "orga_7349295a-5723-44d5-bc13-4271b7d67431",
+      "deploy_url": "https://github.com/merlinofcha0s/sortyquizz-backend.git",
+      "name": "sortyquizz-backend",
+      "alias": "sortyquizz-backend"
+    }
+  ]
+}
