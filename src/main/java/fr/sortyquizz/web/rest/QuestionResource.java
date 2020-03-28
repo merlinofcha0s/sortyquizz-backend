@@ -123,4 +123,17 @@ public class QuestionResource {
         questionService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
+
+    /**
+     * {@code GET  /questions/:id} : get the "id" question.
+     *
+     * @param id the id of the questionDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the questionDTO, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/questions/start/{level}")
+    public ResponseEntity<List<QuestionDTO>> start(@PathVariable Integer level) {
+        log.debug("REST request to start quizz at level : {}", level);
+        Page<QuestionDTO> page = questionService.startNewQuizz(level);
+        return ResponseEntity.ok().body(page.getContent());
+    }
 }

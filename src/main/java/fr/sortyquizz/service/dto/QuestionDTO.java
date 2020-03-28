@@ -2,13 +2,15 @@ package fr.sortyquizz.service.dto;
 
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A DTO for the {@link fr.sortyquizz.domain.Question} entity.
  */
 public class QuestionDTO implements Serializable {
-    
+
     private Long id;
 
     @NotNull
@@ -17,9 +19,10 @@ public class QuestionDTO implements Serializable {
     @NotNull
     private Integer level;
 
-
     private Long packId;
-    
+
+    private Set<AnswerDTO> answers = new HashSet<>();
+
     public Long getId() {
         return id;
     }
@@ -50,6 +53,14 @@ public class QuestionDTO implements Serializable {
 
     public void setPackId(Long packId) {
         this.packId = packId;
+    }
+
+    public Set<AnswerDTO> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(Set<AnswerDTO> answers) {
+        this.answers = answers;
     }
 
     @Override

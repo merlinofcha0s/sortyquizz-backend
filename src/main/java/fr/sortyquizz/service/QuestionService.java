@@ -8,10 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -79,5 +81,31 @@ public class QuestionService {
     public void delete(Long id) {
         log.debug("Request to delete Question : {}", id);
         questionRepository.deleteById(id);
+    }
+
+    /**
+     * Start a quizz, select questions by lvl
+     *
+     * @param level level of the questions
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public Page<QuestionDTO> startNewQuizz(Integer level) {
+        int nbQuestions;
+        switch (level) {
+            case 2:
+                nbQuestions = 5;
+                break;
+            case 3:
+                nbQuestions = 8;
+                break;
+            default:
+                nbQuestions = 3;
+        }
+
+        Pageable pageable = PageRequest.of(0, nbQuestions);
+        log.debug("Request to get all Questions");
+        return questionRepository.findAllByLevel(level, pageable)
+            .map(questionMapper::toDto);
     }
 }
