@@ -11,7 +11,7 @@ import javax.persistence.Lob;
  * A DTO for the {@link fr.sortyquizz.domain.Card} entity.
  */
 public class CardDTO implements Serializable {
-    
+
     private Long id;
 
     @NotNull
@@ -20,7 +20,6 @@ public class CardDTO implements Serializable {
     @NotNull
     private Integer level;
 
-    
     @Lob
     private byte[] picture;
 
@@ -31,7 +30,17 @@ public class CardDTO implements Serializable {
     private Set<ProfileDTO> profiles = new HashSet<>();
 
     private Long packId;
-    
+
+    private String packName;
+
+    public String getPackName() {
+        return packName;
+    }
+
+    public void setPackName(String packName) {
+        this.packName = packName;
+    }
+
     public Long getId() {
         return id;
     }

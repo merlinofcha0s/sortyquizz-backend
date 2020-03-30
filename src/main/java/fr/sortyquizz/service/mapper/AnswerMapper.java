@@ -13,6 +13,7 @@ import org.mapstruct.*;
 public interface AnswerMapper extends EntityMapper<AnswerDTO, Answer> {
 
     @Mapping(source = "question.id", target = "questionId")
+    @Mapping(source = "question.question", target = "question")
     AnswerDTO toDto(Answer answer);
 
     @Mapping(source = "questionId", target = "question")

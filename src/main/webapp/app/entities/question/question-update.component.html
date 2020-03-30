@@ -43,7 +43,7 @@
                     <label class="form-control-label" jhiTranslate="sortyquizzApp.question.pack" for="field_pack">Pack</label>
                     <select class="form-control" id="field_pack" name="pack" formControlName="packId">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="packOption.id" *ngFor="let packOption of packs; trackBy: trackById">{{ packOption.id }}</option>
+                        <option [ngValue]="packOption.id" *ngFor="let packOption of packs; trackBy: trackById">{{ packOption.name }}</option>
                     </select>
                 </div>
             </div>

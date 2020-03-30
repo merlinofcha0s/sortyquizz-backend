@@ -8,7 +8,7 @@ import java.util.Objects;
  * A DTO for the {@link fr.sortyquizz.domain.Answer} entity.
  */
 public class AnswerDTO implements Serializable {
-    
+
     private Long id;
 
     @NotNull
@@ -17,9 +17,18 @@ public class AnswerDTO implements Serializable {
     @NotNull
     private Integer order;
 
-
     private Long questionId;
-    
+
+    private String question;
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
     public Long getId() {
         return id;
     }

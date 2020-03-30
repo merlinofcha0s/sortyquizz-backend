@@ -13,6 +13,7 @@ import org.mapstruct.*;
 public interface CardMapper extends EntityMapper<CardDTO, Card> {
 
     @Mapping(source = "pack.id", target = "packId")
+    @Mapping(source = "pack.name", target = "packName")
     CardDTO toDto(Card card);
 
     @Mapping(target = "removeProfile", ignore = true)

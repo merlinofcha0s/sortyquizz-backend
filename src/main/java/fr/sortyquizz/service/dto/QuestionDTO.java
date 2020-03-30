@@ -21,7 +21,17 @@ public class QuestionDTO implements Serializable {
 
     private Long packId;
 
+    private String packName;
+
     private Set<AnswerDTO> answers = new HashSet<>();
+
+    public String getPackName() {
+        return packName;
+    }
+
+    public void setPackName(String packName) {
+        this.packName = packName;
+    }
 
     public Long getId() {
         return id;

@@ -9,6 +9,7 @@ export interface ICard {
   order?: number;
   profiles?: IProfile[];
   packId?: number;
+  packName?: string;
 }
 
 export class Card implements ICard {
@@ -20,6 +21,7 @@ export class Card implements ICard {
     public picture?: any,
     public order?: number,
     public profiles?: IProfile[],
-    public packId?: number
+    public packId?: number,
+    public packName?: string
   ) {}
 }

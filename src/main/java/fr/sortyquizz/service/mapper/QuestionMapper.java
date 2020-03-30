@@ -14,6 +14,7 @@ public interface QuestionMapper extends EntityMapper<QuestionDTO, Question> {
 
     @Mapping(source = "pack.id", target = "packId")
     @Mapping(source = "answers", target = "answers")
+    @Mapping(source = "pack.name", target = "packName")
     QuestionDTO toDto(Question question);
 
     @Mapping(target = "answers", ignore = true)
