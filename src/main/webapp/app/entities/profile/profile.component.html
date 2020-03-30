@@ -24,6 +24,7 @@
                 <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="reset.bind(this)">
                     <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="level"><span jhiTranslate="sortyquizzApp.profile.level">Level</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="userLogin"><span jhiTranslate="sortyquizzApp.profile.user">User</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -31,6 +32,9 @@
                 <tr *ngFor="let profile of profiles ;trackBy: trackId">
                     <td><a [routerLink]="['/profile', profile.id, 'view']">{{ profile.id }}</a></td>
                     <td>{{ profile.level }}</td>
+                    <td>
+                        {{ profile.userLogin }}
+                    </td>
                     <td class="text-right">
                         <div class="btn-group">
                             <button type="submit"

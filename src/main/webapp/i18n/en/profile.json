@@ -17,7 +17,8 @@
         "title": "Profile"
       },
       "level": "Level",
-      "card": "Card"
+      "card": "Card",
+      "user": "User"
     }
   }
 }

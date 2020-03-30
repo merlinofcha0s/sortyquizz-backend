@@ -17,6 +17,18 @@
             "relationshipName": "card",
             "otherEntityField": "id",
             "ownerSide": false
+        },
+        {
+            "relationshipName": "user",
+            "otherEntityName": "user",
+            "relationshipType": "one-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "login",
+            "ownerSide": true,
+            "useJPADerivedIdentifier": false,
+            "otherEntityRelationshipName": "profile"
         }
     ],
     "changelogDate": "20200327153900",
@@ -29,5 +41,7 @@
     "readOnly": false,
     "embedded": false,
     "clientRootFolder": "",
-    "applications": "*"
+    "applications": "*",
+    "searchEngine": false,
+    "databaseType": "sql"
 }

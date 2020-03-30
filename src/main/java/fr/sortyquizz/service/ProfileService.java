@@ -1,8 +1,10 @@
 package fr.sortyquizz.service;
 
 import fr.sortyquizz.domain.Profile;
+import fr.sortyquizz.domain.User;
 import fr.sortyquizz.repository.ProfileRepository;
 import fr.sortyquizz.service.dto.ProfileDTO;
+import fr.sortyquizz.service.dto.UserDTO;
 import fr.sortyquizz.service.mapper.ProfileMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,5 +81,20 @@ public class ProfileService {
     public void delete(Long id) {
         log.debug("Request to delete Profile : {}", id);
         profileRepository.deleteById(id);
+    }
+
+    /**
+     * Create a new profile for a new user.
+     *
+     * @param user the entity to save.
+     * @return the persisted new profile.
+     */
+    public ProfileDTO createForUser(User user) {
+        log.debug("Request to create new profile for : {}", user);
+        Profile profile = new Profile();
+        profile.setLevel("1");
+        profile.setUser(user);
+        ProfileDTO newProfileCreated = profileMapper.toDto(profile);
+        return save(newProfileCreated);
     }
 }

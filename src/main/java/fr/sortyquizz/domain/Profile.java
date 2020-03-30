@@ -36,6 +36,11 @@ public class Profile implements Serializable {
     @JsonIgnore
     private Set<Card> cards = new HashSet<>();
 
+    @OneToOne(optional = false)
+    @NotNull
+    @JoinColumn(unique = true)
+    private User user;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -81,6 +86,19 @@ public class Profile implements Serializable {
 
     public void setCards(Set<Card> cards) {
         this.cards = cards;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Profile user(User user) {
+        this.user = user;
+        return this;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

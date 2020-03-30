@@ -1,11 +1,3 @@
-id;question;level
-1;Brand;69835
-2;Kiribati Operations Markets;26974
-3;Accounts withdrawal;19435
-4;systematic Plastic;87800
-5;Granite Nepalese Rupee;42071
-6;open-source;24659
-7;USB Surinam Dollar;72684
-8;focus group Future;42898
-9;Yuan Renminbi Fish;49784
-10;Gorgeous;96407
+id;question;level;pack_id
+1;The step of the big bang ?;1;1
+2;The step of the big bang ? 2;1;1
