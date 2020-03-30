@@ -84,6 +84,16 @@ public class ProfileService {
     }
 
     /**
+     * Delete the profile by user id.
+     *
+     * @param userId the id of the user.
+     */
+    public void deleteByUserId(Long userId) {
+        log.debug("Request to delete Profile for user : {}", userId);
+        profileRepository.deleteByUserId(userId);
+    }
+
+    /**
      * Create a new profile for a new user.
      *
      * @param user the entity to save.

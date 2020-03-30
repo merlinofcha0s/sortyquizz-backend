@@ -43,11 +43,16 @@ public class UserService {
 
     private final CacheManager cacheManager;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository, CacheManager cacheManager) {
+    private ProfileService profileService;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                       AuthorityRepository authorityRepository, CacheManager cacheManager,
+                       ProfileService profileService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.cacheManager = cacheManager;
+        this.profileService = profileService;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -231,6 +236,7 @@ public class UserService {
 
     public void deleteUser(String login) {
         userRepository.findOneByLogin(login).ifPresent(user -> {
+            profileService.deleteByUserId(user.getId());
             userRepository.delete(user);
             this.clearUserCaches(user);
             log.debug("Deleted User: {}", user);
