@@ -18,9 +18,24 @@ spring:
       hibernate.cache.use_second_level_cache: true
       hibernate.cache.use_query_cache: false
       hibernate.generate_statistics: false
+  mail:
+    host: smtp.mailgun.org
+    port: 587
+    username: ${MAILGUN_LOGIN}
+    password: ${MAILGUN_PASSWORD}
+    protocol: smtp
+    tls: true
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+      ssl.trust: smtp.mailgun.org
 
 jhipster:
   security:
     authentication:
       jwt:
         base64-secret: ${JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET}
+  mail:
+    from: ${MAILGUN_MAIL_FROM}
+      base-url: ${BASE_URL}
+
