@@ -2,6 +2,7 @@ package fr.sortyquizz.web.rest;
 
 import fr.sortyquizz.domain.User;
 import fr.sortyquizz.repository.UserRepository;
+import fr.sortyquizz.security.AuthoritiesConstants;
 import fr.sortyquizz.security.SecurityUtils;
 import fr.sortyquizz.service.MailService;
 import fr.sortyquizz.service.UserService;
@@ -15,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,6 +61,7 @@ public class AccountResource {
      */
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
         if (!checkPasswordLength(managedUserVM.getPassword())) {
             throw new InvalidPasswordException();
@@ -76,7 +79,7 @@ public class AccountResource {
     @GetMapping("/activate")
     public void activateAccount(@RequestParam(value = "key") String key) {
         Optional<User> user = userService.activateRegistration(key);
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new AccountResourceException("No user was found for this activation key");
         }
     }
@@ -88,6 +91,7 @@ public class AccountResource {
      * @return the login if the user is authenticated.
      */
     @GetMapping("/authenticate")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public String isAuthenticated(HttpServletRequest request) {
         log.debug("REST request to check if the current user is authenticated");
         return request.getRemoteUser();
@@ -100,6 +104,7 @@ public class AccountResource {
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the user couldn't be returned.
      */
     @GetMapping("/account")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public UserDTO getAccount() {
         return userService.getUserWithAuthorities()
             .map(UserDTO::new)
@@ -114,6 +119,7 @@ public class AccountResource {
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the user login wasn't found.
      */
     @PostMapping("/account")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public void saveAccount(@Valid @RequestBody UserDTO userDTO) {
         String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new AccountResourceException("Current user login not found"));
         Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
@@ -121,7 +127,7 @@ public class AccountResource {
             throw new EmailAlreadyUsedException();
         }
         Optional<User> user = userRepository.findOneByLogin(userLogin);
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new AccountResourceException("User could not be found");
         }
         userService.updateUser(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail(),
@@ -174,7 +180,7 @@ public class AccountResource {
         Optional<User> user =
             userService.completePasswordReset(keyAndPassword.getNewPassword(), keyAndPassword.getKey());
 
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new AccountResourceException("No user was found for this reset key");
         }
     }

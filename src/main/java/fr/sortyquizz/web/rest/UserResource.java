@@ -5,6 +5,7 @@ import fr.sortyquizz.domain.User;
 import fr.sortyquizz.repository.UserRepository;
 import fr.sortyquizz.security.AuthoritiesConstants;
 import fr.sortyquizz.service.MailService;
+import fr.sortyquizz.service.ProfileService;
 import fr.sortyquizz.service.UserService;
 import fr.sortyquizz.service.dto.UserDTO;
 import fr.sortyquizz.web.rest.errors.BadRequestAlertException;
@@ -71,10 +72,13 @@ public class UserResource {
 
     private final MailService mailService;
 
-    public UserResource(UserService userService, UserRepository userRepository, MailService mailService) {
+    private ProfileService profileService;
+
+    public UserResource(UserService userService, UserRepository userRepository, MailService mailService, ProfileService profileService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.mailService = mailService;
+        this.profileService = profileService;
     }
 
     /**
@@ -143,6 +147,7 @@ public class UserResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users.
      */
     @GetMapping("/users")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) {
         final Page<UserDTO> page = userService.getAllManagedUsers(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
@@ -166,6 +171,7 @@ public class UserResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the "login" user, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/users/{login:" + Constants.LOGIN_REGEX + "}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<UserDTO> getUser(@PathVariable String login) {
         log.debug("REST request to get User : {}", login);
         return ResponseUtil.wrapOrNotFound(
