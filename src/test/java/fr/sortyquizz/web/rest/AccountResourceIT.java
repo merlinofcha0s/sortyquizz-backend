@@ -101,7 +101,7 @@ public class AccountResourceIT {
         user.setAuthorities(authorities);
         User userEntity = userService.createUser(user);
 
-        ProfileDTO profile = profileService.createForUser(userEntity);
+        profileService.createForUser(userEntity);
 
         restAccountMockMvc.perform(get("/api/account")
             .accept(MediaType.APPLICATION_JSON))
