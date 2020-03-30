@@ -3,12 +3,15 @@ package fr.sortyquizz.web.rest;
 import fr.sortyquizz.SortyquizzApp;
 import fr.sortyquizz.config.Constants;
 import fr.sortyquizz.domain.Authority;
+import fr.sortyquizz.domain.Profile;
 import fr.sortyquizz.domain.User;
 import fr.sortyquizz.repository.AuthorityRepository;
 import fr.sortyquizz.repository.UserRepository;
 import fr.sortyquizz.security.AuthoritiesConstants;
+import fr.sortyquizz.service.ProfileService;
 import fr.sortyquizz.service.UserService;
 import fr.sortyquizz.service.dto.PasswordChangeDTO;
+import fr.sortyquizz.service.dto.ProfileDTO;
 import fr.sortyquizz.service.dto.UserDTO;
 import fr.sortyquizz.web.rest.vm.KeyAndPasswordVM;
 import fr.sortyquizz.web.rest.vm.ManagedUserVM;
@@ -53,6 +56,9 @@ public class AccountResourceIT {
     private UserService userService;
 
     @Autowired
+    private ProfileService profileService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -63,11 +69,11 @@ public class AccountResourceIT {
     public void testNonAuthenticatedUser() throws Exception {
         restAccountMockMvc.perform(get("/api/authenticate")
             .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().string(""));
+            .andExpect(status().isForbidden());
     }
 
     @Test
+    @WithMockUser(value = TEST_USER_LOGIN, roles = "ADMIN")
     public void testAuthenticatedUser() throws Exception {
         restAccountMockMvc.perform(get("/api/authenticate")
             .with(request -> {
@@ -80,6 +86,7 @@ public class AccountResourceIT {
     }
 
     @Test
+    @WithMockUser(value = TEST_USER_LOGIN, roles = "ADMIN")
     public void testGetExistingAccount() throws Exception {
         Set<String> authorities = new HashSet<>();
         authorities.add(AuthoritiesConstants.ADMIN);
@@ -92,7 +99,9 @@ public class AccountResourceIT {
         user.setImageUrl("http://placehold.it/50x50");
         user.setLangKey("en");
         user.setAuthorities(authorities);
-        userService.createUser(user);
+        User userEntity = userService.createUser(user);
+
+        ProfileDTO profile = profileService.createForUser(userEntity);
 
         restAccountMockMvc.perform(get("/api/account")
             .accept(MediaType.APPLICATION_JSON))
@@ -108,6 +117,7 @@ public class AccountResourceIT {
     }
 
     @Test
+    @WithMockUser(value = "getting-unknown-account", roles = "ADMIN")
     public void testGetUnknownAccount() throws Exception {
         restAccountMockMvc.perform(get("/api/account")
             .accept(MediaType.APPLICATION_PROBLEM_JSON))
@@ -116,6 +126,7 @@ public class AccountResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(value = "register-valid-account", roles = "ADMIN")
     public void testRegisterValid() throws Exception {
         ManagedUserVM validUser = new ManagedUserVM();
         validUser.setLogin("test-register-valid");
@@ -211,6 +222,7 @@ public class AccountResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(value = "register-null-account", roles = "ADMIN")
     public void testRegisterNullPassword() throws Exception {
         ManagedUserVM invalidUser = new ManagedUserVM();
         invalidUser.setLogin("bob");
@@ -235,6 +247,7 @@ public class AccountResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(value = "register-duplicated-account", roles = "ADMIN")
     public void testRegisterDuplicateLogin() throws Exception {
         // First registration
         ManagedUserVM firstUser = new ManagedUserVM();
@@ -291,6 +304,7 @@ public class AccountResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(value = "register-duplicated-account", roles = "ADMIN")
     public void testRegisterDuplicateEmail() throws Exception {
         // First user
         ManagedUserVM firstUser = new ManagedUserVM();
@@ -373,6 +387,7 @@ public class AccountResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(value = "register-ignored-account", roles = "ADMIN")
     public void testRegisterAdminIsIgnored() throws Exception {
         ManagedUserVM validUser = new ManagedUserVM();
         validUser.setLogin("badguy");
@@ -426,7 +441,7 @@ public class AccountResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser("save-account")
+    @WithMockUser(value = "save-account", roles = "ADMIN")
     public void testSaveAccount() throws Exception {
         User user = new User();
         user.setLogin("save-account");
@@ -496,7 +511,7 @@ public class AccountResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser("save-existing-email")
+    @WithMockUser(value = "save-existing-email", roles = "ADMIN")
     public void testSaveExistingEmail() throws Exception {
         User user = new User();
         user.setLogin("save-existing-email");
@@ -536,7 +551,7 @@ public class AccountResourceIT {
 
     @Test
     @Transactional
-    @WithMockUser("save-existing-email-and-login")
+    @WithMockUser(value = "save-existing-email-and-login", roles = "ADMIN")
     public void testSaveExistingEmailAndLogin() throws Exception {
         User user = new User();
         user.setLogin("save-existing-email-and-login");
@@ -579,8 +594,8 @@ public class AccountResourceIT {
 
         restAccountMockMvc.perform(post("/api/account/change-password")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(new PasswordChangeDTO("1"+currentPassword, "new password")))
-)
+            .content(TestUtil.convertObjectToJsonBytes(new PasswordChangeDTO("1" + currentPassword, "new password")))
+        )
             .andExpect(status().isBadRequest());
 
         User updatedUser = userRepository.findOneByLogin("change-password-wrong-existing-password").orElse(null);
@@ -602,7 +617,7 @@ public class AccountResourceIT {
         restAccountMockMvc.perform(post("/api/account/change-password")
             .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(new PasswordChangeDTO(currentPassword, "new password")))
-)
+        )
             .andExpect(status().isOk());
 
         User updatedUser = userRepository.findOneByLogin("change-password").orElse(null);
@@ -625,7 +640,7 @@ public class AccountResourceIT {
         restAccountMockMvc.perform(post("/api/account/change-password")
             .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(new PasswordChangeDTO(currentPassword, newPassword)))
-)
+        )
             .andExpect(status().isBadRequest());
 
         User updatedUser = userRepository.findOneByLogin("change-password-too-small").orElse(null);
@@ -648,7 +663,7 @@ public class AccountResourceIT {
         restAccountMockMvc.perform(post("/api/account/change-password")
             .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(new PasswordChangeDTO(currentPassword, newPassword)))
-)
+        )
             .andExpect(status().isBadRequest());
 
         User updatedUser = userRepository.findOneByLogin("change-password-too-long").orElse(null);
@@ -669,7 +684,7 @@ public class AccountResourceIT {
         restAccountMockMvc.perform(post("/api/account/change-password")
             .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(new PasswordChangeDTO(currentPassword, "")))
-)
+        )
             .andExpect(status().isBadRequest());
 
         User updatedUser = userRepository.findOneByLogin("change-password-empty").orElse(null);
@@ -688,7 +703,7 @@ public class AccountResourceIT {
 
         restAccountMockMvc.perform(post("/api/account/reset-password/init")
             .content("password-reset@example.com")
-)
+        )
             .andExpect(status().isOk());
     }
 
@@ -704,7 +719,7 @@ public class AccountResourceIT {
 
         restAccountMockMvc.perform(post("/api/account/reset-password/init")
             .content("password-reset@EXAMPLE.COM")
-)
+        )
             .andExpect(status().isOk());
     }
 

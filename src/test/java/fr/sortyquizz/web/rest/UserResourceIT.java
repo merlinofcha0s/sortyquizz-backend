@@ -2,9 +2,12 @@ package fr.sortyquizz.web.rest;
 
 import fr.sortyquizz.SortyquizzApp;
 import fr.sortyquizz.domain.Authority;
+import fr.sortyquizz.domain.Profile;
 import fr.sortyquizz.domain.User;
+import fr.sortyquizz.repository.ProfileRepository;
 import fr.sortyquizz.repository.UserRepository;
 import fr.sortyquizz.security.AuthoritiesConstants;
+import fr.sortyquizz.service.ProfileService;
 import fr.sortyquizz.service.dto.UserDTO;
 import fr.sortyquizz.service.mapper.UserMapper;
 import fr.sortyquizz.web.rest.vm.ManagedUserVM;
@@ -69,6 +72,9 @@ public class UserResourceIT {
     private UserMapper userMapper;
 
     @Autowired
+    private ProfileRepository profileRepository;
+
+    @Autowired
     private EntityManager em;
 
     @Autowired
@@ -87,7 +93,7 @@ public class UserResourceIT {
 
     /**
      * Create a User.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which has a required relationship to the User entity.
      */
@@ -143,7 +149,13 @@ public class UserResourceIT {
             assertThat(testUser.getEmail()).isEqualTo(DEFAULT_EMAIL);
             assertThat(testUser.getImageUrl()).isEqualTo(DEFAULT_IMAGEURL);
             assertThat(testUser.getLangKey()).isEqualTo(DEFAULT_LANGKEY);
+
+            Optional<Profile> testProfile = profileRepository.findByUserId(testUser.getId());
+            assertThat(testProfile).isPresent();
+            assertThat(testProfile.get().getLevel()).isEqualTo("1");
         });
+
+
     }
 
     @Test
