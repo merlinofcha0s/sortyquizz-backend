@@ -37,5 +37,5 @@ jhipster:
         base64-secret: ${JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET}
   mail:
     from: ${MAILGUN_MAIL_FROM}
-      base-url: ${BASE_URL}
+    base-url: ${BASE_URL}
 
