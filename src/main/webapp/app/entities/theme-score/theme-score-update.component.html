@@ -1,0 +1,74 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-theme-score-heading" jhiTranslate="sortyquizzApp.themeScore.home.createOrEditLabel">Create or edit a Theme Score</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="sortyquizzApp.themeScore.xp" for="field_xp">Xp</label>
+                    <input type="number" class="form-control" name="xp" id="field_xp"
+                           formControlName="xp"/>
+                    <div *ngIf="editForm.get('xp')!.invalid && (editForm.get('xp')!.dirty || editForm.get('xp')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('xp')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.get('xp')?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="sortyquizzApp.themeScore.level" for="field_level">Level</label>
+                    <input type="number" class="form-control" name="level" id="field_level"
+                           formControlName="level"/>
+                    <div *ngIf="editForm.get('level')!.invalid && (editForm.get('level')!.dirty || editForm.get('level')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('level')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.get('level')?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="sortyquizzApp.themeScore.profile" for="field_profile">Profile</label>
+                    <select class="form-control" id="field_profile" name="profile" formControlName="profileId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="profileOption.id" *ngFor="let profileOption of profiles; trackBy: trackById">{{ profileOption.id }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="sortyquizzApp.themeScore.theme" for="field_theme">Theme</label>
+                    <select class="form-control" id="field_theme" name="theme" formControlName="themeId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="themeOption.id" *ngFor="let themeOption of themes; trackBy: trackById">{{ themeOption.id }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

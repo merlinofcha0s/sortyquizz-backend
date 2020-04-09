@@ -12,6 +12,8 @@ import java.util.Objects;
 import java.util.HashSet;
 import java.util.Set;
 
+import fr.sortyquizz.domain.enumeration.QuestionType;
+
 /**
  * A Question.
  */
@@ -32,8 +34,9 @@ public class Question implements Serializable {
     private String question;
 
     @NotNull
-    @Column(name = "level", nullable = false)
-    private Integer level;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private QuestionType type;
 
     @OneToMany(mappedBy = "question")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -65,17 +68,17 @@ public class Question implements Serializable {
         this.question = question;
     }
 
-    public Integer getLevel() {
-        return level;
+    public QuestionType getType() {
+        return type;
     }
 
-    public Question level(Integer level) {
-        this.level = level;
+    public Question type(QuestionType type) {
+        this.type = type;
         return this;
     }
 
-    public void setLevel(Integer level) {
-        this.level = level;
+    public void setType(QuestionType type) {
+        this.type = type;
     }
 
     public Set<Answer> getAnswers() {
@@ -138,7 +141,7 @@ public class Question implements Serializable {
         return "Question{" +
             "id=" + getId() +
             ", question='" + getQuestion() + "'" +
-            ", level=" + getLevel() +
+            ", type='" + getType() + "'" +
             "}";
     }
 }

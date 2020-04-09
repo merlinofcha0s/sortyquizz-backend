@@ -1,0 +1,25 @@
+{
+  "sortyquizzApp": {
+    "referenceXP": {
+      "home": {
+        "title": "Reference XPS",
+        "createLabel": "Create a new Reference XP",
+        "createOrEditLabel": "Create or edit a Reference XP",
+        "notFound": "No Reference XPS found"
+      },
+      "created": "A new Reference XP is created with identifier {{ param }}",
+      "updated": "A Reference XP is updated with identifier {{ param }}",
+      "deleted": "A Reference XP is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Reference XP {{ id }}?"
+      },
+      "detail": {
+        "title": "Reference XP"
+      },
+      "level": "Level",
+      "minXp": "Min Xp",
+      "maxXp": "Max Xp",
+      "xpType": "Xp Type"
+    }
+  }
+}

@@ -88,18 +88,12 @@ public class CardResource {
      * {@code GET  /cards} : get all the cards.
      *
      * @param pageable the pagination information.
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of cards in body.
      */
     @GetMapping("/cards")
-    public ResponseEntity<List<CardDTO>> getAllCards(Pageable pageable, @RequestParam(required = false, defaultValue = "false") boolean eagerload) {
+    public ResponseEntity<List<CardDTO>> getAllCards(Pageable pageable) {
         log.debug("REST request to get a page of Cards");
-        Page<CardDTO> page;
-        if (eagerload) {
-            page = cardService.findAllWithEagerRelationships(pageable);
-        } else {
-            page = cardService.findAll(pageable);
-        }
+        Page<CardDTO> page = cardService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

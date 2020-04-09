@@ -1,5 +1,6 @@
 package fr.sortyquizz.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -10,6 +11,8 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.HashSet;
 import java.util.Set;
+
+import fr.sortyquizz.domain.enumeration.PackType;
 
 /**
  * A Pack.
@@ -31,8 +34,21 @@ public class Pack implements Serializable {
     private String name;
 
     @NotNull
-    @Column(name = "category", nullable = false)
-    private String category;
+    @Column(name = "level", nullable = false)
+    private Integer level;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private PackType type;
+
+    @NotNull
+    @Column(name = "life", nullable = false)
+    private Integer life;
+
+    @OneToOne
+    @JoinColumn(unique = true)
+    private Rule rule;
 
     @OneToMany(mappedBy = "pack")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -41,6 +57,14 @@ public class Pack implements Serializable {
     @OneToMany(mappedBy = "pack")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Card> cards = new HashSet<>();
+
+    @OneToMany(mappedBy = "pack")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<UserPack> userPacks = new HashSet<>();
+
+    @ManyToOne
+    @JsonIgnoreProperties("packs")
+    private Theme theme;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -64,17 +88,56 @@ public class Pack implements Serializable {
         this.name = name;
     }
 
-    public String getCategory() {
-        return category;
+    public Integer getLevel() {
+        return level;
     }
 
-    public Pack category(String category) {
-        this.category = category;
+    public Pack level(Integer level) {
+        this.level = level;
         return this;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public PackType getType() {
+        return type;
+    }
+
+    public Pack type(PackType type) {
+        this.type = type;
+        return this;
+    }
+
+    public void setType(PackType type) {
+        this.type = type;
+    }
+
+    public Integer getLife() {
+        return life;
+    }
+
+    public Pack life(Integer life) {
+        this.life = life;
+        return this;
+    }
+
+    public void setLife(Integer life) {
+        this.life = life;
+    }
+
+    public Rule getRule() {
+        return rule;
+    }
+
+    public Pack rule(Rule rule) {
+        this.rule = rule;
+        return this;
+    }
+
+    public void setRule(Rule rule) {
+        this.rule = rule;
     }
 
     public Set<Question> getQuestions() {
@@ -126,6 +189,44 @@ public class Pack implements Serializable {
     public void setCards(Set<Card> cards) {
         this.cards = cards;
     }
+
+    public Set<UserPack> getUserPacks() {
+        return userPacks;
+    }
+
+    public Pack userPacks(Set<UserPack> userPacks) {
+        this.userPacks = userPacks;
+        return this;
+    }
+
+    public Pack addUserPack(UserPack userPack) {
+        this.userPacks.add(userPack);
+        userPack.setPack(this);
+        return this;
+    }
+
+    public Pack removeUserPack(UserPack userPack) {
+        this.userPacks.remove(userPack);
+        userPack.setPack(null);
+        return this;
+    }
+
+    public void setUserPacks(Set<UserPack> userPacks) {
+        this.userPacks = userPacks;
+    }
+
+    public Theme getTheme() {
+        return theme;
+    }
+
+    public Pack theme(Theme theme) {
+        this.theme = theme;
+        return this;
+    }
+
+    public void setTheme(Theme theme) {
+        this.theme = theme;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -149,7 +250,9 @@ public class Pack implements Serializable {
         return "Pack{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
-            ", category='" + getCategory() + "'" +
+            ", level=" + getLevel() +
+            ", type='" + getType() + "'" +
+            ", life=" + getLife() +
             "}";
     }
 }

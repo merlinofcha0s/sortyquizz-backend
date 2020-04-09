@@ -1,13 +1,15 @@
-import { IProfile } from 'app/shared/model/profile.model';
+import { ValueType } from 'app/shared/model/enumerations/value-type.model';
+import { SortingType } from 'app/shared/model/enumerations/sorting-type.model';
 
 export interface ICard {
   id?: number;
-  name?: string;
-  level?: number;
+  display?: string;
+  valueToSort?: string;
+  valueType?: ValueType;
   pictureContentType?: string;
   picture?: any;
+  sortingType?: SortingType;
   order?: number;
-  profiles?: IProfile[];
   packId?: number;
   packName?: string;
 }
@@ -15,12 +17,13 @@ export interface ICard {
 export class Card implements ICard {
   constructor(
     public id?: number,
-    public name?: string,
-    public level?: number,
+    public display?: string,
+    public valueToSort?: string,
+    public valueType?: ValueType,
     public pictureContentType?: string,
     public picture?: any,
+    public sortingType?: SortingType,
     public order?: number,
-    public profiles?: IProfile[],
     public packId?: number,
     public packName?: string
   ) {}

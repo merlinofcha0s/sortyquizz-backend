@@ -16,7 +16,6 @@ public interface CardMapper extends EntityMapper<CardDTO, Card> {
     @Mapping(source = "pack.name", target = "packName")
     CardDTO toDto(Card card);
 
-    @Mapping(target = "removeProfile", ignore = true)
     @Mapping(source = "packId", target = "pack")
     Card toEntity(CardDTO cardDTO);
 

@@ -18,8 +18,20 @@
             <column name="name" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
-            <column name="category" type="varchar(255)">
+            <column name="level" type="integer">
                 <constraints nullable="false" />
+            </column>
+            <column name="type" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="life" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="rule_id" type="bigint">
+                <constraints unique="true" nullable="true" uniqueConstraintName="ux_pack_rule_id" />
+            </column>
+            <column name="theme_id" type="bigint">
+                <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
@@ -45,7 +57,9 @@
                   tableName="pack">
             <column name="id" type="numeric"/>
             <column name="name" type="string"/>
-            <column name="category" type="string"/>
+            <column name="level" type="numeric"/>
+            <column name="type" type="string"/>
+            <column name="life" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->
         </loadData>
     </changeSet>

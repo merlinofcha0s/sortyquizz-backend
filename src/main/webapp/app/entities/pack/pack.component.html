@@ -24,7 +24,11 @@
                 <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="reset.bind(this)">
                     <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="name"><span jhiTranslate="sortyquizzApp.pack.name">Name</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="category"><span jhiTranslate="sortyquizzApp.pack.category">Category</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="level"><span jhiTranslate="sortyquizzApp.pack.level">Level</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="type"><span jhiTranslate="sortyquizzApp.pack.type">Type</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="life"><span jhiTranslate="sortyquizzApp.pack.life">Life</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="ruleId"><span jhiTranslate="sortyquizzApp.pack.rule">Rule</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="themeId"><span jhiTranslate="sortyquizzApp.pack.theme">Theme</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -32,7 +36,19 @@
                 <tr *ngFor="let pack of packs ;trackBy: trackId">
                     <td><a [routerLink]="['/pack', pack.id, 'view']">{{ pack.id }}</a></td>
                     <td>{{ pack.name }}</td>
-                    <td>{{ pack.category }}</td>
+                    <td>{{ pack.level }}</td>
+                    <td jhiTranslate="{{ 'sortyquizzApp.PackType.' + pack.type }}">{{ pack.type }}</td>
+                    <td>{{ pack.life }}</td>
+                    <td>
+                        <div *ngIf="pack.ruleId">
+                            <a [routerLink]="['/rule', pack.ruleId , 'view']" >{{ pack.ruleId }}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="pack.themeId">
+                            <a [routerLink]="['/theme', pack.themeId , 'view']" >{{ pack.themeId }}</a>
+                        </div>
+                    </td>
                     <td class="text-right">
                         <div class="btn-group">
                             <button type="submit"

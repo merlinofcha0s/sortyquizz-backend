@@ -1,6 +1,5 @@
 package fr.sortyquizz.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -29,17 +28,15 @@ public class Profile implements Serializable {
 
     @NotNull
     @Column(name = "level", nullable = false)
-    private String level;
+    private Integer level;
 
-    @ManyToMany(mappedBy = "profiles")
+    @OneToMany(mappedBy = "profile")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @JsonIgnore
-    private Set<Card> cards = new HashSet<>();
+    private Set<UserPack> userPacks = new HashSet<>();
 
-    @OneToOne(optional = false)
-    @NotNull
-    @JoinColumn(unique = true)
-    private User user;
+    @OneToMany(mappedBy = "profile")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<ThemeScore> themeScores = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -50,55 +47,67 @@ public class Profile implements Serializable {
         this.id = id;
     }
 
-    public String getLevel() {
+    public Integer getLevel() {
         return level;
     }
 
-    public Profile level(String level) {
+    public Profile level(Integer level) {
         this.level = level;
         return this;
     }
 
-    public void setLevel(String level) {
+    public void setLevel(Integer level) {
         this.level = level;
     }
 
-    public Set<Card> getCards() {
-        return cards;
+    public Set<UserPack> getUserPacks() {
+        return userPacks;
     }
 
-    public Profile cards(Set<Card> cards) {
-        this.cards = cards;
+    public Profile userPacks(Set<UserPack> userPacks) {
+        this.userPacks = userPacks;
         return this;
     }
 
-    public Profile addCard(Card card) {
-        this.cards.add(card);
-        card.getProfiles().add(this);
+    public Profile addUserPack(UserPack userPack) {
+        this.userPacks.add(userPack);
+        userPack.setProfile(this);
         return this;
     }
 
-    public Profile removeCard(Card card) {
-        this.cards.remove(card);
-        card.getProfiles().remove(this);
+    public Profile removeUserPack(UserPack userPack) {
+        this.userPacks.remove(userPack);
+        userPack.setProfile(null);
         return this;
     }
 
-    public void setCards(Set<Card> cards) {
-        this.cards = cards;
+    public void setUserPacks(Set<UserPack> userPacks) {
+        this.userPacks = userPacks;
     }
 
-    public User getUser() {
-        return user;
+    public Set<ThemeScore> getThemeScores() {
+        return themeScores;
     }
 
-    public Profile user(User user) {
-        this.user = user;
+    public Profile themeScores(Set<ThemeScore> themeScores) {
+        this.themeScores = themeScores;
         return this;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public Profile addThemeScore(ThemeScore themeScore) {
+        this.themeScores.add(themeScore);
+        themeScore.setProfile(this);
+        return this;
+    }
+
+    public Profile removeThemeScore(ThemeScore themeScore) {
+        this.themeScores.remove(themeScore);
+        themeScore.setProfile(null);
+        return this;
+    }
+
+    public void setThemeScores(Set<ThemeScore> themeScores) {
+        this.themeScores = themeScores;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -122,7 +131,7 @@ public class Profile implements Serializable {
     public String toString() {
         return "Profile{" +
             "id=" + getId() +
-            ", level='" + getLevel() + "'" +
+            ", level=" + getLevel() +
             "}";
     }
 }

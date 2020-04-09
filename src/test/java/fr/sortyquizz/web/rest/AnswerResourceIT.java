@@ -39,6 +39,9 @@ public class AnswerResourceIT {
     private static final Integer DEFAULT_ORDER = 1;
     private static final Integer UPDATED_ORDER = 2;
 
+    private static final Boolean DEFAULT_IS_THE_RIGHT_ANSWER = false;
+    private static final Boolean UPDATED_IS_THE_RIGHT_ANSWER = true;
+
     @Autowired
     private AnswerRepository answerRepository;
 
@@ -65,7 +68,8 @@ public class AnswerResourceIT {
     public static Answer createEntity(EntityManager em) {
         Answer answer = new Answer()
             .answer(DEFAULT_ANSWER)
-            .order(DEFAULT_ORDER);
+            .order(DEFAULT_ORDER)
+            .isTheRightAnswer(DEFAULT_IS_THE_RIGHT_ANSWER);
         return answer;
     }
     /**
@@ -77,7 +81,8 @@ public class AnswerResourceIT {
     public static Answer createUpdatedEntity(EntityManager em) {
         Answer answer = new Answer()
             .answer(UPDATED_ANSWER)
-            .order(UPDATED_ORDER);
+            .order(UPDATED_ORDER)
+            .isTheRightAnswer(UPDATED_IS_THE_RIGHT_ANSWER);
         return answer;
     }
 
@@ -104,6 +109,7 @@ public class AnswerResourceIT {
         Answer testAnswer = answerList.get(answerList.size() - 1);
         assertThat(testAnswer.getAnswer()).isEqualTo(DEFAULT_ANSWER);
         assertThat(testAnswer.getOrder()).isEqualTo(DEFAULT_ORDER);
+        assertThat(testAnswer.isIsTheRightAnswer()).isEqualTo(DEFAULT_IS_THE_RIGHT_ANSWER);
     }
 
     @Test
@@ -148,25 +154,6 @@ public class AnswerResourceIT {
 
     @Test
     @Transactional
-    public void checkOrderIsRequired() throws Exception {
-        int databaseSizeBeforeTest = answerRepository.findAll().size();
-        // set the field null
-        answer.setOrder(null);
-
-        // Create the Answer, which fails.
-        AnswerDTO answerDTO = answerMapper.toDto(answer);
-
-        restAnswerMockMvc.perform(post("/api/answers")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(answerDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Answer> answerList = answerRepository.findAll();
-        assertThat(answerList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllAnswers() throws Exception {
         // Initialize the database
         answerRepository.saveAndFlush(answer);
@@ -177,7 +164,8 @@ public class AnswerResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(answer.getId().intValue())))
             .andExpect(jsonPath("$.[*].answer").value(hasItem(DEFAULT_ANSWER)))
-            .andExpect(jsonPath("$.[*].order").value(hasItem(DEFAULT_ORDER)));
+            .andExpect(jsonPath("$.[*].order").value(hasItem(DEFAULT_ORDER)))
+            .andExpect(jsonPath("$.[*].isTheRightAnswer").value(hasItem(DEFAULT_IS_THE_RIGHT_ANSWER.booleanValue())));
     }
     
     @Test
@@ -192,7 +180,8 @@ public class AnswerResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(answer.getId().intValue()))
             .andExpect(jsonPath("$.answer").value(DEFAULT_ANSWER))
-            .andExpect(jsonPath("$.order").value(DEFAULT_ORDER));
+            .andExpect(jsonPath("$.order").value(DEFAULT_ORDER))
+            .andExpect(jsonPath("$.isTheRightAnswer").value(DEFAULT_IS_THE_RIGHT_ANSWER.booleanValue()));
     }
 
     @Test
@@ -217,7 +206,8 @@ public class AnswerResourceIT {
         em.detach(updatedAnswer);
         updatedAnswer
             .answer(UPDATED_ANSWER)
-            .order(UPDATED_ORDER);
+            .order(UPDATED_ORDER)
+            .isTheRightAnswer(UPDATED_IS_THE_RIGHT_ANSWER);
         AnswerDTO answerDTO = answerMapper.toDto(updatedAnswer);
 
         restAnswerMockMvc.perform(put("/api/answers")
@@ -231,6 +221,7 @@ public class AnswerResourceIT {
         Answer testAnswer = answerList.get(answerList.size() - 1);
         assertThat(testAnswer.getAnswer()).isEqualTo(UPDATED_ANSWER);
         assertThat(testAnswer.getOrder()).isEqualTo(UPDATED_ORDER);
+        assertThat(testAnswer.isIsTheRightAnswer()).isEqualTo(UPDATED_IS_THE_RIGHT_ANSWER);
     }
 
     @Test

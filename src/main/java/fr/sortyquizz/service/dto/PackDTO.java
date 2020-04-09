@@ -3,6 +3,7 @@ package fr.sortyquizz.service.dto;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
+import fr.sortyquizz.domain.enumeration.PackType;
 
 /**
  * A DTO for the {@link fr.sortyquizz.domain.Pack} entity.
@@ -15,8 +16,18 @@ public class PackDTO implements Serializable {
     private String name;
 
     @NotNull
-    private String category;
+    private Integer level;
 
+    @NotNull
+    private PackType type;
+
+    @NotNull
+    private Integer life;
+
+
+    private Long ruleId;
+
+    private Long themeId;
     
     public Long getId() {
         return id;
@@ -34,12 +45,44 @@ public class PackDTO implements Serializable {
         this.name = name;
     }
 
-    public String getCategory() {
-        return category;
+    public Integer getLevel() {
+        return level;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public PackType getType() {
+        return type;
+    }
+
+    public void setType(PackType type) {
+        this.type = type;
+    }
+
+    public Integer getLife() {
+        return life;
+    }
+
+    public void setLife(Integer life) {
+        this.life = life;
+    }
+
+    public Long getRuleId() {
+        return ruleId;
+    }
+
+    public void setRuleId(Long ruleId) {
+        this.ruleId = ruleId;
+    }
+
+    public Long getThemeId() {
+        return themeId;
+    }
+
+    public void setThemeId(Long themeId) {
+        this.themeId = themeId;
     }
 
     @Override
@@ -68,7 +111,11 @@ public class PackDTO implements Serializable {
         return "PackDTO{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
-            ", category='" + getCategory() + "'" +
+            ", level=" + getLevel() +
+            ", type='" + getType() + "'" +
+            ", life=" + getLife() +
+            ", ruleId=" + getRuleId() +
+            ", themeId=" + getThemeId() +
             "}";
     }
 }

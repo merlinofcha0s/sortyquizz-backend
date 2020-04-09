@@ -17,9 +17,14 @@
         "title": "Pack"
       },
       "name": "Name",
-      "category": "Category",
+      "level": "Level",
+      "type": "Type",
+      "life": "Life",
+      "rule": "Rule",
       "question": "Question",
-      "card": "Card"
+      "card": "Card",
+      "userPack": "User Pack",
+      "theme": "Theme"
     }
   }
 }

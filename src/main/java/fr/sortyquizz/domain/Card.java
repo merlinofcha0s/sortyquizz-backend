@@ -9,8 +9,10 @@ import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.HashSet;
-import java.util.Set;
+
+import fr.sortyquizz.domain.enumeration.ValueType;
+
+import fr.sortyquizz.domain.enumeration.SortingType;
 
 /**
  * A Card.
@@ -28,12 +30,17 @@ public class Card implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "display", nullable = false)
+    private String display;
 
     @NotNull
-    @Column(name = "level", nullable = false)
-    private Integer level;
+    @Column(name = "value_to_sort", nullable = false)
+    private String valueToSort;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "value_type", nullable = false)
+    private ValueType valueType;
 
     
     @Lob
@@ -44,15 +51,12 @@ public class Card implements Serializable {
     private String pictureContentType;
 
     @NotNull
-    @Column(name = "jhi_order", nullable = false)
-    private Integer order;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "sorting_type", nullable = false)
+    private SortingType sortingType;
 
-    @ManyToMany
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @JoinTable(name = "card_profile",
-               joinColumns = @JoinColumn(name = "card_id", referencedColumnName = "id"),
-               inverseJoinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"))
-    private Set<Profile> profiles = new HashSet<>();
+    @Column(name = "jhi_order")
+    private Integer order;
 
     @ManyToOne
     @JsonIgnoreProperties("cards")
@@ -67,30 +71,43 @@ public class Card implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getDisplay() {
+        return display;
     }
 
-    public Card name(String name) {
-        this.name = name;
+    public Card display(String display) {
+        this.display = display;
         return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDisplay(String display) {
+        this.display = display;
     }
 
-    public Integer getLevel() {
-        return level;
+    public String getValueToSort() {
+        return valueToSort;
     }
 
-    public Card level(Integer level) {
-        this.level = level;
+    public Card valueToSort(String valueToSort) {
+        this.valueToSort = valueToSort;
         return this;
     }
 
-    public void setLevel(Integer level) {
-        this.level = level;
+    public void setValueToSort(String valueToSort) {
+        this.valueToSort = valueToSort;
+    }
+
+    public ValueType getValueType() {
+        return valueType;
+    }
+
+    public Card valueType(ValueType valueType) {
+        this.valueType = valueType;
+        return this;
+    }
+
+    public void setValueType(ValueType valueType) {
+        this.valueType = valueType;
     }
 
     public byte[] getPicture() {
@@ -119,6 +136,19 @@ public class Card implements Serializable {
         this.pictureContentType = pictureContentType;
     }
 
+    public SortingType getSortingType() {
+        return sortingType;
+    }
+
+    public Card sortingType(SortingType sortingType) {
+        this.sortingType = sortingType;
+        return this;
+    }
+
+    public void setSortingType(SortingType sortingType) {
+        this.sortingType = sortingType;
+    }
+
     public Integer getOrder() {
         return order;
     }
@@ -130,31 +160,6 @@ public class Card implements Serializable {
 
     public void setOrder(Integer order) {
         this.order = order;
-    }
-
-    public Set<Profile> getProfiles() {
-        return profiles;
-    }
-
-    public Card profiles(Set<Profile> profiles) {
-        this.profiles = profiles;
-        return this;
-    }
-
-    public Card addProfile(Profile profile) {
-        this.profiles.add(profile);
-        profile.getCards().add(this);
-        return this;
-    }
-
-    public Card removeProfile(Profile profile) {
-        this.profiles.remove(profile);
-        profile.getCards().remove(this);
-        return this;
-    }
-
-    public void setProfiles(Set<Profile> profiles) {
-        this.profiles = profiles;
     }
 
     public Pack getPack() {
@@ -191,10 +196,12 @@ public class Card implements Serializable {
     public String toString() {
         return "Card{" +
             "id=" + getId() +
-            ", name='" + getName() + "'" +
-            ", level=" + getLevel() +
+            ", display='" + getDisplay() + "'" +
+            ", valueToSort='" + getValueToSort() + "'" +
+            ", valueType='" + getValueType() + "'" +
             ", picture='" + getPicture() + "'" +
             ", pictureContentType='" + getPictureContentType() + "'" +
+            ", sortingType='" + getSortingType() + "'" +
             ", order=" + getOrder() +
             "}";
     }

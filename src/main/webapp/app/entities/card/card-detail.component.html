@@ -8,13 +8,17 @@
             <jhi-alert-error></jhi-alert-error>
 
             <dl class="row-md jh-entity-details">
-                <dt><span jhiTranslate="sortyquizzApp.card.name">Name</span></dt>
+                <dt><span jhiTranslate="sortyquizzApp.card.display">Display</span></dt>
                 <dd>
-                    <span>{{ card.name }}</span>
+                    <span>{{ card.display }}</span>
                 </dd>
-                <dt><span jhiTranslate="sortyquizzApp.card.level">Level</span></dt>
+                <dt><span jhiTranslate="sortyquizzApp.card.valueToSort">Value To Sort</span></dt>
                 <dd>
-                    <span>{{ card.level }}</span>
+                    <span>{{ card.valueToSort }}</span>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.card.valueType">Value Type</span></dt>
+                <dd>
+                    <span jhiTranslate="{{ 'sortyquizzApp.ValueType.' + card.valueType }}">{{ card.valueType }}</span>
                 </dd>
                 <dt><span jhiTranslate="sortyquizzApp.card.picture">Picture</span></dt>
                 <dd>
@@ -23,15 +27,13 @@
                         {{ card.pictureContentType }}, {{ byteSize(card.picture) }}
                     </div>
                 </dd>
+                <dt><span jhiTranslate="sortyquizzApp.card.sortingType">Sorting Type</span></dt>
+                <dd>
+                    <span jhiTranslate="{{ 'sortyquizzApp.SortingType.' + card.sortingType }}">{{ card.sortingType }}</span>
+                </dd>
                 <dt><span jhiTranslate="sortyquizzApp.card.order">Order</span></dt>
                 <dd>
                     <span>{{ card.order }}</span>
-                </dd>
-                <dt><span jhiTranslate="sortyquizzApp.card.profile">Profile</span></dt>
-                <dd>
-                    <span *ngFor="let profile of card.profiles; let last = last">
-                        <a [routerLink]="['/profile', profile?.id, 'view']">{{ profile.name }}</a>{{ last ? '' : ', ' }}
-                    </span>
                 </dd>
                 <dt><span jhiTranslate="sortyquizzApp.card.pack">Pack</span></dt>
                 <dd>

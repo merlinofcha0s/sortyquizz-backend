@@ -2,6 +2,7 @@ import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { PackService } from 'app/entities/pack/pack.service';
 import { IPack, Pack } from 'app/shared/model/pack.model';
+import { PackType } from 'app/shared/model/enumerations/pack-type.model';
 
 describe('Service Tests', () => {
   describe('Pack Service', () => {
@@ -20,7 +21,7 @@ describe('Service Tests', () => {
       service = injector.get(PackService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new Pack(0, 'AAAAAAA', 'AAAAAAA');
+      elemDefault = new Pack(0, 'AAAAAAA', 0, PackType.FREE, 0);
     });
 
     describe('Service methods', () => {
@@ -55,7 +56,9 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             name: 'BBBBBB',
-            category: 'BBBBBB'
+            level: 1,
+            type: 'BBBBBB',
+            life: 1
           },
           elemDefault
         );
@@ -73,7 +76,9 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             name: 'BBBBBB',
-            category: 'BBBBBB'
+            level: 1,
+            type: 'BBBBBB',
+            life: 1
           },
           elemDefault
         );

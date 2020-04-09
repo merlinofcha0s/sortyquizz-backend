@@ -2,15 +2,23 @@
     "name": "Card",
     "fields": [
         {
-            "fieldName": "name",
+            "fieldName": "display",
             "fieldType": "String",
             "fieldValidateRules": [
                 "required"
             ]
         },
         {
-            "fieldName": "level",
-            "fieldType": "Integer",
+            "fieldName": "valueToSort",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "valueType",
+            "fieldType": "ValueType",
+            "fieldValues": "DATE,NUMBER,STRING",
             "fieldValidateRules": [
                 "required"
             ]
@@ -24,22 +32,19 @@
             ]
         },
         {
-            "fieldName": "order",
-            "fieldType": "Integer",
+            "fieldName": "sortingType",
+            "fieldType": "SortingType",
+            "fieldValues": "NATURAL,MANUAL",
             "fieldValidateRules": [
                 "required"
             ]
+        },
+        {
+            "fieldName": "order",
+            "fieldType": "Integer"
         }
     ],
     "relationships": [
-        {
-            "relationshipType": "many-to-many",
-            "otherEntityName": "profile",
-            "otherEntityRelationshipName": "card",
-            "relationshipName": "profile",
-            "otherEntityField": "name",
-            "ownerSide": true
-        },
         {
             "relationshipType": "many-to-one",
             "otherEntityName": "pack",

@@ -24,7 +24,7 @@
                 <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="reset.bind(this)">
                     <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="question"><span jhiTranslate="sortyquizzApp.question.question">Question</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="level"><span jhiTranslate="sortyquizzApp.question.level">Level</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="type"><span jhiTranslate="sortyquizzApp.question.type">Type</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="packName"><span jhiTranslate="sortyquizzApp.question.pack">Pack</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
@@ -33,7 +33,7 @@
                 <tr *ngFor="let question of questions ;trackBy: trackId">
                     <td><a [routerLink]="['/question', question.id, 'view']">{{ question.id }}</a></td>
                     <td>{{ question.question }}</td>
-                    <td>{{ question.level }}</td>
+                    <td jhiTranslate="{{ 'sortyquizzApp.QuestionType.' + question.type }}">{{ question.type }}</td>
                     <td>
                         <div *ngIf="question.packId">
                             <a [routerLink]="['/pack', question.packId , 'view']" >{{ question.packName }}</a>

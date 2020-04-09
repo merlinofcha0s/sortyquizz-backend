@@ -9,12 +9,8 @@ import { JhiDataUtils, JhiFileLoadError, JhiEventManager, JhiEventWithContent } 
 import { ICard, Card } from 'app/shared/model/card.model';
 import { CardService } from './card.service';
 import { AlertError } from 'app/shared/alert/alert-error.model';
-import { IProfile } from 'app/shared/model/profile.model';
-import { ProfileService } from 'app/entities/profile/profile.service';
 import { IPack } from 'app/shared/model/pack.model';
 import { PackService } from 'app/entities/pack/pack.service';
-
-type SelectableEntity = IProfile | IPack;
 
 @Component({
   selector: 'jhi-card-update',
@@ -22,17 +18,17 @@ type SelectableEntity = IProfile | IPack;
 })
 export class CardUpdateComponent implements OnInit {
   isSaving = false;
-  profiles: IProfile[] = [];
   packs: IPack[] = [];
 
   editForm = this.fb.group({
     id: [],
-    name: [null, [Validators.required]],
-    level: [null, [Validators.required]],
+    display: [null, [Validators.required]],
+    valueToSort: [null, [Validators.required]],
+    valueType: [null, [Validators.required]],
     picture: [null, [Validators.required]],
     pictureContentType: [],
-    order: [null, [Validators.required]],
-    profiles: [],
+    sortingType: [null, [Validators.required]],
+    order: [],
     packId: []
   });
 
@@ -40,7 +36,6 @@ export class CardUpdateComponent implements OnInit {
     protected dataUtils: JhiDataUtils,
     protected eventManager: JhiEventManager,
     protected cardService: CardService,
-    protected profileService: ProfileService,
     protected packService: PackService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
@@ -50,8 +45,6 @@ export class CardUpdateComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ card }) => {
       this.updateForm(card);
 
-      this.profileService.query().subscribe((res: HttpResponse<IProfile[]>) => (this.profiles = res.body || []));
-
       this.packService.query().subscribe((res: HttpResponse<IPack[]>) => (this.packs = res.body || []));
     });
   }
@@ -59,12 +52,13 @@ export class CardUpdateComponent implements OnInit {
   updateForm(card: ICard): void {
     this.editForm.patchValue({
       id: card.id,
-      name: card.name,
-      level: card.level,
+      display: card.display,
+      valueToSort: card.valueToSort,
+      valueType: card.valueType,
       picture: card.picture,
       pictureContentType: card.pictureContentType,
+      sortingType: card.sortingType,
       order: card.order,
-      profiles: card.profiles,
       packId: card.packId
     });
   }
@@ -103,12 +97,13 @@ export class CardUpdateComponent implements OnInit {
     return {
       ...new Card(),
       id: this.editForm.get(['id'])!.value,
-      name: this.editForm.get(['name'])!.value,
-      level: this.editForm.get(['level'])!.value,
+      display: this.editForm.get(['display'])!.value,
+      valueToSort: this.editForm.get(['valueToSort'])!.value,
+      valueType: this.editForm.get(['valueType'])!.value,
       pictureContentType: this.editForm.get(['pictureContentType'])!.value,
       picture: this.editForm.get(['picture'])!.value,
+      sortingType: this.editForm.get(['sortingType'])!.value,
       order: this.editForm.get(['order'])!.value,
-      profiles: this.editForm.get(['profiles'])!.value,
       packId: this.editForm.get(['packId'])!.value
     };
   }
@@ -129,18 +124,7 @@ export class CardUpdateComponent implements OnInit {
     this.isSaving = false;
   }
 
-  trackById(index: number, item: SelectableEntity): any {
+  trackById(index: number, item: IPack): any {
     return item.id;
-  }
-
-  getSelected(selectedVals: IProfile[], option: IProfile): IProfile {
-    if (selectedVals) {
-      for (let i = 0; i < selectedVals.length; i++) {
-        if (option.id === selectedVals[i].id) {
-          return selectedVals[i];
-        }
-      }
-    }
-    return option;
   }
 }

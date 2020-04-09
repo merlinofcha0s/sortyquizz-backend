@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import fr.sortyquizz.domain.enumeration.QuestionType;
+
 /**
  * A DTO for the {@link fr.sortyquizz.domain.Question} entity.
  */
@@ -17,7 +19,8 @@ public class QuestionDTO implements Serializable {
     private String question;
 
     @NotNull
-    private Integer level;
+    private QuestionType type;
+
 
     private Long packId;
 
@@ -49,12 +52,12 @@ public class QuestionDTO implements Serializable {
         this.question = question;
     }
 
-    public Integer getLevel() {
-        return level;
+    public QuestionType getType() {
+        return type;
     }
 
-    public void setLevel(Integer level) {
-        this.level = level;
+    public void setType(QuestionType type) {
+        this.type = type;
     }
 
     public Long getPackId() {
@@ -99,7 +102,7 @@ public class QuestionDTO implements Serializable {
         return "QuestionDTO{" +
             "id=" + getId() +
             ", question='" + getQuestion() + "'" +
-            ", level=" + getLevel() +
+            ", type='" + getType() + "'" +
             ", packId=" + getPackId() +
             "}";
     }

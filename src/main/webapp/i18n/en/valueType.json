@@ -1,0 +1,10 @@
+{
+  "sortyquizzApp": {
+    "ValueType": {
+      "null": "",
+      "DATE": "DATE",
+      "NUMBER": "NUMBER",
+      "STRING": "STRING"
+    }
+  }
+}

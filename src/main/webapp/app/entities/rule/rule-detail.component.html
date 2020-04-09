@@ -1,0 +1,42 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="rule">
+            <h2><span jhiTranslate="sortyquizzApp.rule.detail.title">Rule</span> {{ rule.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="sortyquizzApp.rule.nbMaxQuestions">Nb Max Questions</span></dt>
+                <dd>
+                    <span>{{ rule.nbMaxQuestions }}</span>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.rule.timePerQuestion">Time Per Question</span></dt>
+                <dd>
+                    <span>{{ rule.timePerQuestion }}</span>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.rule.timeForSorting">Time For Sorting</span></dt>
+                <dd>
+                    <span>{{ rule.timeForSorting }}</span>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.rule.nbMinCardToWin">Nb Min Card To Win</span></dt>
+                <dd>
+                    <span>{{ rule.nbMinCardToWin }}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/rule', rule.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

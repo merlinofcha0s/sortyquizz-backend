@@ -1,0 +1,42 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="referenceXP">
+            <h2><span jhiTranslate="sortyquizzApp.referenceXP.detail.title">Reference XP</span> {{ referenceXP.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="sortyquizzApp.referenceXP.level">Level</span></dt>
+                <dd>
+                    <span>{{ referenceXP.level }}</span>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.referenceXP.minXp">Min Xp</span></dt>
+                <dd>
+                    <span>{{ referenceXP.minXp }}</span>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.referenceXP.maxXp">Max Xp</span></dt>
+                <dd>
+                    <span>{{ referenceXP.maxXp }}</span>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.referenceXP.xpType">Xp Type</span></dt>
+                <dd>
+                    <span jhiTranslate="{{ 'sortyquizzApp.XPType.' + referenceXP.xpType }}">{{ referenceXP.xpType }}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/reference-xp', referenceXP.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

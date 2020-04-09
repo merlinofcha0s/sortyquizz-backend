@@ -1,13 +1,13 @@
-import { ICard } from 'app/shared/model/card.model';
+import { IUserPack } from 'app/shared/model/user-pack.model';
+import { IThemeScore } from 'app/shared/model/theme-score.model';
 
 export interface IProfile {
   id?: number;
-  level?: string;
-  cards?: ICard[];
-  userLogin?: string;
-  userId?: number;
+  level?: number;
+  userPacks?: IUserPack[];
+  themeScores?: IThemeScore[];
 }
 
 export class Profile implements IProfile {
-  constructor(public id?: number, public level?: string, public cards?: ICard[], public userLogin?: string, public userId?: number) {}
+  constructor(public id?: number, public level?: number, public userPacks?: IUserPack[], public themeScores?: IThemeScore[]) {}
 }

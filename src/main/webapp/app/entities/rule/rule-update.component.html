@@ -1,0 +1,90 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-rule-heading" jhiTranslate="sortyquizzApp.rule.home.createOrEditLabel">Create or edit a Rule</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="sortyquizzApp.rule.nbMaxQuestions" for="field_nbMaxQuestions">Nb Max Questions</label>
+                    <input type="number" class="form-control" name="nbMaxQuestions" id="field_nbMaxQuestions"
+                           formControlName="nbMaxQuestions"/>
+                    <div *ngIf="editForm.get('nbMaxQuestions')!.invalid && (editForm.get('nbMaxQuestions')!.dirty || editForm.get('nbMaxQuestions')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('nbMaxQuestions')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.get('nbMaxQuestions')?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="sortyquizzApp.rule.timePerQuestion" for="field_timePerQuestion">Time Per Question</label>
+                    <input type="number" class="form-control" name="timePerQuestion" id="field_timePerQuestion"
+                           formControlName="timePerQuestion"/>
+                    <div *ngIf="editForm.get('timePerQuestion')!.invalid && (editForm.get('timePerQuestion')!.dirty || editForm.get('timePerQuestion')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('timePerQuestion')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.get('timePerQuestion')?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="sortyquizzApp.rule.timeForSorting" for="field_timeForSorting">Time For Sorting</label>
+                    <input type="number" class="form-control" name="timeForSorting" id="field_timeForSorting"
+                           formControlName="timeForSorting"/>
+                    <div *ngIf="editForm.get('timeForSorting')!.invalid && (editForm.get('timeForSorting')!.dirty || editForm.get('timeForSorting')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('timeForSorting')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.get('timeForSorting')?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="sortyquizzApp.rule.nbMinCardToWin" for="field_nbMinCardToWin">Nb Min Card To Win</label>
+                    <input type="number" class="form-control" name="nbMinCardToWin" id="field_nbMinCardToWin"
+                           formControlName="nbMinCardToWin"/>
+                    <div *ngIf="editForm.get('nbMinCardToWin')!.invalid && (editForm.get('nbMinCardToWin')!.dirty || editForm.get('nbMinCardToWin')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('nbMinCardToWin')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.get('nbMinCardToWin')?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

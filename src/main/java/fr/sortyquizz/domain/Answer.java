@@ -29,9 +29,11 @@ public class Answer implements Serializable {
     @Column(name = "answer", nullable = false)
     private String answer;
 
-    @NotNull
-    @Column(name = "jhi_order", nullable = false)
+    @Column(name = "jhi_order")
     private Integer order;
+
+    @Column(name = "is_the_right_answer")
+    private Boolean isTheRightAnswer;
 
     @ManyToOne
     @JsonIgnoreProperties("answers")
@@ -72,6 +74,19 @@ public class Answer implements Serializable {
         this.order = order;
     }
 
+    public Boolean isIsTheRightAnswer() {
+        return isTheRightAnswer;
+    }
+
+    public Answer isTheRightAnswer(Boolean isTheRightAnswer) {
+        this.isTheRightAnswer = isTheRightAnswer;
+        return this;
+    }
+
+    public void setIsTheRightAnswer(Boolean isTheRightAnswer) {
+        this.isTheRightAnswer = isTheRightAnswer;
+    }
+
     public Question getQuestion() {
         return question;
     }
@@ -108,6 +123,7 @@ public class Answer implements Serializable {
             "id=" + getId() +
             ", answer='" + getAnswer() + "'" +
             ", order=" + getOrder() +
+            ", isTheRightAnswer='" + isIsTheRightAnswer() + "'" +
             "}";
     }
 }

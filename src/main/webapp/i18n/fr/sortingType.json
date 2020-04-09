@@ -1,0 +1,9 @@
+{
+  "sortyquizzApp": {
+    "SortingType": {
+      "null": "",
+      "NATURAL": "NATURAL",
+      "MANUAL": "MANUAL"
+    }
+  }
+}

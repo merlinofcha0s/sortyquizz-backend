@@ -1,0 +1,58 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="userPack">
+            <h2><span jhiTranslate="sortyquizzApp.userPack.detail.title">User Pack</span> {{ userPack.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="sortyquizzApp.userPack.state">State</span></dt>
+                <dd>
+                    <span jhiTranslate="{{ 'sortyquizzApp.PackState.' + userPack.state }}">{{ userPack.state }}</span>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.userPack.lifeLeft">Life Left</span></dt>
+                <dd>
+                    <span>{{ userPack.lifeLeft }}</span>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.userPack.nbQuestionsToSucceed">Nb Questions To Succeed</span></dt>
+                <dd>
+                    <span>{{ userPack.nbQuestionsToSucceed }}</span>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.userPack.timeAtQuizzStep">Time At Quizz Step</span></dt>
+                <dd>
+                    <span>{{ userPack.timeAtQuizzStep }}</span>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.userPack.timeAtSortingStep">Time At Sorting Step</span></dt>
+                <dd>
+                    <span>{{ userPack.timeAtSortingStep }}</span>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.userPack.profile">Profile</span></dt>
+                <dd>
+                    <div *ngIf="userPack.profileId">
+                        <a [routerLink]="['/profile', userPack.profileId, 'view']">{{ userPack.profileId }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.userPack.pack">Pack</span></dt>
+                <dd>
+                    <div *ngIf="userPack.packId">
+                        <a [routerLink]="['/pack', userPack.packId, 'view']">{{ userPack.packId }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/user-pack', userPack.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

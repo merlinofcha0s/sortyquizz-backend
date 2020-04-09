@@ -7,8 +7,6 @@ import { Observable } from 'rxjs';
 
 import { IProfile, Profile } from 'app/shared/model/profile.model';
 import { ProfileService } from './profile.service';
-import { IUser } from 'app/core/user/user.model';
-import { UserService } from 'app/core/user/user.service';
 
 @Component({
   selector: 'jhi-profile-update',
@@ -16,34 +14,24 @@ import { UserService } from 'app/core/user/user.service';
 })
 export class ProfileUpdateComponent implements OnInit {
   isSaving = false;
-  users: IUser[] = [];
 
   editForm = this.fb.group({
     id: [],
-    level: [null, [Validators.required]],
-    userId: [null, Validators.required]
+    level: [null, [Validators.required]]
   });
 
-  constructor(
-    protected profileService: ProfileService,
-    protected userService: UserService,
-    protected activatedRoute: ActivatedRoute,
-    private fb: FormBuilder
-  ) {}
+  constructor(protected profileService: ProfileService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ profile }) => {
       this.updateForm(profile);
-
-      this.userService.query().subscribe((res: HttpResponse<IUser[]>) => (this.users = res.body || []));
     });
   }
 
   updateForm(profile: IProfile): void {
     this.editForm.patchValue({
       id: profile.id,
-      level: profile.level,
-      userId: profile.userId
+      level: profile.level
     });
   }
 
@@ -65,8 +53,7 @@ export class ProfileUpdateComponent implements OnInit {
     return {
       ...new Profile(),
       id: this.editForm.get(['id'])!.value,
-      level: this.editForm.get(['level'])!.value,
-      userId: this.editForm.get(['userId'])!.value
+      level: this.editForm.get(['level'])!.value
     };
   }
 
@@ -84,9 +71,5 @@ export class ProfileUpdateComponent implements OnInit {
 
   protected onSaveError(): void {
     this.isSaving = false;
-  }
-
-  trackById(index: number, item: IUser): any {
-    return item.id;
   }
 }

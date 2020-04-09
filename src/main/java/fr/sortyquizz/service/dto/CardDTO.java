@@ -2,10 +2,10 @@ package fr.sortyquizz.service.dto;
 
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
 import javax.persistence.Lob;
+import fr.sortyquizz.domain.enumeration.ValueType;
+import fr.sortyquizz.domain.enumeration.SortingType;
 
 /**
  * A DTO for the {@link fr.sortyquizz.domain.Card} entity.
@@ -15,19 +15,24 @@ public class CardDTO implements Serializable {
     private Long id;
 
     @NotNull
-    private String name;
+    private String display;
 
     @NotNull
-    private Integer level;
+    private String valueToSort;
+
+    @NotNull
+    private ValueType valueType;
+
 
     @Lob
     private byte[] picture;
 
     private String pictureContentType;
     @NotNull
+    private SortingType sortingType;
+
     private Integer order;
 
-    private Set<ProfileDTO> profiles = new HashSet<>();
 
     private Long packId;
 
@@ -49,20 +54,28 @@ public class CardDTO implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getDisplay() {
+        return display;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDisplay(String display) {
+        this.display = display;
     }
 
-    public Integer getLevel() {
-        return level;
+    public String getValueToSort() {
+        return valueToSort;
     }
 
-    public void setLevel(Integer level) {
-        this.level = level;
+    public void setValueToSort(String valueToSort) {
+        this.valueToSort = valueToSort;
+    }
+
+    public ValueType getValueType() {
+        return valueType;
+    }
+
+    public void setValueType(ValueType valueType) {
+        this.valueType = valueType;
     }
 
     public byte[] getPicture() {
@@ -81,20 +94,20 @@ public class CardDTO implements Serializable {
         this.pictureContentType = pictureContentType;
     }
 
+    public SortingType getSortingType() {
+        return sortingType;
+    }
+
+    public void setSortingType(SortingType sortingType) {
+        this.sortingType = sortingType;
+    }
+
     public Integer getOrder() {
         return order;
     }
 
     public void setOrder(Integer order) {
         this.order = order;
-    }
-
-    public Set<ProfileDTO> getProfiles() {
-        return profiles;
-    }
-
-    public void setProfiles(Set<ProfileDTO> profiles) {
-        this.profiles = profiles;
     }
 
     public Long getPackId() {
@@ -130,11 +143,12 @@ public class CardDTO implements Serializable {
     public String toString() {
         return "CardDTO{" +
             "id=" + getId() +
-            ", name='" + getName() + "'" +
-            ", level=" + getLevel() +
+            ", display='" + getDisplay() + "'" +
+            ", valueToSort='" + getValueToSort() + "'" +
+            ", valueType='" + getValueType() + "'" +
             ", picture='" + getPicture() + "'" +
+            ", sortingType='" + getSortingType() + "'" +
             ", order=" + getOrder() +
-            ", profiles='" + getProfiles() + "'" +
             ", packId=" + getPackId() +
             "}";
     }

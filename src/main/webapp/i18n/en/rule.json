@@ -1,0 +1,25 @@
+{
+  "sortyquizzApp": {
+    "rule": {
+      "home": {
+        "title": "Rules",
+        "createLabel": "Create a new Rule",
+        "createOrEditLabel": "Create or edit a Rule",
+        "notFound": "No Rules found"
+      },
+      "created": "A new Rule is created with identifier {{ param }}",
+      "updated": "A Rule is updated with identifier {{ param }}",
+      "deleted": "A Rule is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Rule {{ id }}?"
+      },
+      "detail": {
+        "title": "Rule"
+      },
+      "nbMaxQuestions": "Nb Max Questions",
+      "timePerQuestion": "Time Per Question",
+      "timeForSorting": "Time For Sorting",
+      "nbMinCardToWin": "Nb Min Card To Win"
+    }
+  }
+}

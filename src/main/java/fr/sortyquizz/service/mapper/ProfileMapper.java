@@ -9,16 +9,14 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link Profile} and its DTO {@link ProfileDTO}.
  */
-@Mapper(componentModel = "spring", uses = {UserMapper.class})
+@Mapper(componentModel = "spring", uses = {})
 public interface ProfileMapper extends EntityMapper<ProfileDTO, Profile> {
 
-    @Mapping(source = "user.id", target = "userId")
-    @Mapping(source = "user.login", target = "userLogin")
-    ProfileDTO toDto(Profile profile);
 
-    @Mapping(target = "cards", ignore = true)
-    @Mapping(target = "removeCard", ignore = true)
-    @Mapping(source = "userId", target = "user")
+    @Mapping(target = "userPacks", ignore = true)
+    @Mapping(target = "removeUserPack", ignore = true)
+    @Mapping(target = "themeScores", ignore = true)
+    @Mapping(target = "removeThemeScore", ignore = true)
     Profile toEntity(ProfileDTO profileDTO);
 
     default Profile fromId(Long id) {

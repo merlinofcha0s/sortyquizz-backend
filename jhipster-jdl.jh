@@ -1,37 +1,102 @@
+enum XPType {
+ PROFILE, THEME
+}
+
+entity ReferenceXP {
+	level Integer required,
+    minXp Integer required,
+    maxXp Integer required,
+    xpType XPType required
+}
+
 entity Profile {
-	level String required
+	level Integer required
+}
+
+entity ThemeScore {
+    xp Integer required,
+    level Integer required
+}
+
+enum SortingType {
+ NATURAL, MANUAL
+}
+
+enum ValueType {
+ DATE, NUMBER, STRING
 }
 
 entity Card {
-	name String required,
-    level Integer required,
+	display String required,
+    valueToSort String required,
+    valueType ValueType required
     picture Blob required,
-    order Integer required
+    sortingType SortingType required,
+    order Integer
+}
+
+entity Theme {
+	name String required,
+}
+
+enum PackType {
+ FREE, PREMIUM
 }
 
 entity Pack {
 	name String required,
-    category String required
+    level Integer required,
+    type PackType required,
+    life Integer required
+}
+
+enum PackState {
+ OPEN, COMPLETED, RECYCLED
+}
+
+entity UserPack {
+	state PackState required,
+    lifeLeft Integer required,
+    nbQuestionsToSucceed Integer required
+    timeAtQuizzStep Integer required,
+    timeAtSortingStep Integer required
+}
+
+enum QuestionType {
+ MULTIPLE_CHOICE, SIMPLE, SORT
 }
 
 entity Question {
 	question String required,
-    level Integer required
+    type QuestionType required
 }
 
 entity Answer {
 	answer String required,
-    order Integer required
+    order Integer,
+    isTheRightAnswer Boolean
 }
 
-relationship ManyToMany {
-	Card{profile(name)} to Profile{card}
+entity Rule {
+   nbMaxQuestions Integer required,
+   timePerQuestion Integer required,
+   timeForSorting Integer required
+   nbMinCardToWin Integer required
+}
+
+relationship OneToOne {
+	Pack{rule} to Rule,
 }
 
 relationship OneToMany {
 	Pack{question} to Question,
     Pack{card} to Card,
-    Question{answer} to Answer
+    Question{answer} to Answer,
+    Theme{pack} to Pack,
+    Profile{userPack} to UserPack,
+    Profile{themeScore} to ThemeScore
+    Theme{themeScore} to ThemeScore
+    Pack{userPack} to UserPack
 }
 
 paginate * with infinite-scroll

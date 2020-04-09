@@ -1,0 +1,25 @@
+{
+  "sortyquizzApp": {
+    "themeScore": {
+      "home": {
+        "title": "ThemeScores",
+        "createLabel": "Créer un nouveau Theme Score",
+        "createOrEditLabel": "Créer ou éditer un Theme Score",
+        "notFound": "Aucun Theme Score trouvé"
+      },
+      "created": "Un nouveau Theme Score a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Theme Score avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Theme Score avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Theme Score {{ id }} ?"
+      },
+      "detail": {
+        "title": "Theme Score"
+      },
+      "xp": "Xp",
+      "level": "Level",
+      "profile": "Profile",
+      "theme": "Theme"
+    }
+  }
+}

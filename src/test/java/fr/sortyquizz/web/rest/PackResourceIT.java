@@ -24,6 +24,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import fr.sortyquizz.domain.enumeration.PackType;
 /**
  * Integration tests for the {@link PackResource} REST controller.
  */
@@ -36,8 +37,14 @@ public class PackResourceIT {
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
-    private static final String DEFAULT_CATEGORY = "AAAAAAAAAA";
-    private static final String UPDATED_CATEGORY = "BBBBBBBBBB";
+    private static final Integer DEFAULT_LEVEL = 1;
+    private static final Integer UPDATED_LEVEL = 2;
+
+    private static final PackType DEFAULT_TYPE = PackType.FREE;
+    private static final PackType UPDATED_TYPE = PackType.PREMIUM;
+
+    private static final Integer DEFAULT_LIFE = 1;
+    private static final Integer UPDATED_LIFE = 2;
 
     @Autowired
     private PackRepository packRepository;
@@ -65,7 +72,9 @@ public class PackResourceIT {
     public static Pack createEntity(EntityManager em) {
         Pack pack = new Pack()
             .name(DEFAULT_NAME)
-            .category(DEFAULT_CATEGORY);
+            .level(DEFAULT_LEVEL)
+            .type(DEFAULT_TYPE)
+            .life(DEFAULT_LIFE);
         return pack;
     }
     /**
@@ -77,7 +86,9 @@ public class PackResourceIT {
     public static Pack createUpdatedEntity(EntityManager em) {
         Pack pack = new Pack()
             .name(UPDATED_NAME)
-            .category(UPDATED_CATEGORY);
+            .level(UPDATED_LEVEL)
+            .type(UPDATED_TYPE)
+            .life(UPDATED_LIFE);
         return pack;
     }
 
@@ -103,7 +114,9 @@ public class PackResourceIT {
         assertThat(packList).hasSize(databaseSizeBeforeCreate + 1);
         Pack testPack = packList.get(packList.size() - 1);
         assertThat(testPack.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testPack.getCategory()).isEqualTo(DEFAULT_CATEGORY);
+        assertThat(testPack.getLevel()).isEqualTo(DEFAULT_LEVEL);
+        assertThat(testPack.getType()).isEqualTo(DEFAULT_TYPE);
+        assertThat(testPack.getLife()).isEqualTo(DEFAULT_LIFE);
     }
 
     @Test
@@ -148,10 +161,48 @@ public class PackResourceIT {
 
     @Test
     @Transactional
-    public void checkCategoryIsRequired() throws Exception {
+    public void checkLevelIsRequired() throws Exception {
         int databaseSizeBeforeTest = packRepository.findAll().size();
         // set the field null
-        pack.setCategory(null);
+        pack.setLevel(null);
+
+        // Create the Pack, which fails.
+        PackDTO packDTO = packMapper.toDto(pack);
+
+        restPackMockMvc.perform(post("/api/packs")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(packDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Pack> packList = packRepository.findAll();
+        assertThat(packList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkTypeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = packRepository.findAll().size();
+        // set the field null
+        pack.setType(null);
+
+        // Create the Pack, which fails.
+        PackDTO packDTO = packMapper.toDto(pack);
+
+        restPackMockMvc.perform(post("/api/packs")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(packDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Pack> packList = packRepository.findAll();
+        assertThat(packList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkLifeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = packRepository.findAll().size();
+        // set the field null
+        pack.setLife(null);
 
         // Create the Pack, which fails.
         PackDTO packDTO = packMapper.toDto(pack);
@@ -177,7 +228,9 @@ public class PackResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(pack.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].category").value(hasItem(DEFAULT_CATEGORY)));
+            .andExpect(jsonPath("$.[*].level").value(hasItem(DEFAULT_LEVEL)))
+            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].life").value(hasItem(DEFAULT_LIFE)));
     }
     
     @Test
@@ -192,7 +245,9 @@ public class PackResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(pack.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.category").value(DEFAULT_CATEGORY));
+            .andExpect(jsonPath("$.level").value(DEFAULT_LEVEL))
+            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
+            .andExpect(jsonPath("$.life").value(DEFAULT_LIFE));
     }
 
     @Test
@@ -217,7 +272,9 @@ public class PackResourceIT {
         em.detach(updatedPack);
         updatedPack
             .name(UPDATED_NAME)
-            .category(UPDATED_CATEGORY);
+            .level(UPDATED_LEVEL)
+            .type(UPDATED_TYPE)
+            .life(UPDATED_LIFE);
         PackDTO packDTO = packMapper.toDto(updatedPack);
 
         restPackMockMvc.perform(put("/api/packs")
@@ -230,7 +287,9 @@ public class PackResourceIT {
         assertThat(packList).hasSize(databaseSizeBeforeUpdate);
         Pack testPack = packList.get(packList.size() - 1);
         assertThat(testPack.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testPack.getCategory()).isEqualTo(UPDATED_CATEGORY);
+        assertThat(testPack.getLevel()).isEqualTo(UPDATED_LEVEL);
+        assertThat(testPack.getType()).isEqualTo(UPDATED_TYPE);
+        assertThat(testPack.getLife()).isEqualTo(UPDATED_LIFE);
     }
 
     @Test

@@ -1,0 +1,46 @@
+{
+    "name": "ThemeScore",
+    "fields": [
+        {
+            "fieldName": "xp",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "level",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "profile",
+            "otherEntityRelationshipName": "themeScore",
+            "relationshipName": "profile",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "theme",
+            "otherEntityRelationshipName": "themeScore",
+            "relationshipName": "theme",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20200409091500",
+    "entityTableName": "theme_score",
+    "dto": "mapstruct",
+    "pagination": "infinite-scroll",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "readOnly": false,
+    "embedded": false,
+    "clientRootFolder": "",
+    "applications": "*"
+}

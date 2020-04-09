@@ -15,10 +15,13 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name" type="varchar(255)">
+            <column name="display" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
-            <column name="level" type="integer">
+            <column name="value_to_sort" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="value_type" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
             <column name="picture" type="longblob">
@@ -27,8 +30,11 @@
             <column name="picture_content_type" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
-            <column name="jhi_order" type="integer">
+            <column name="sorting_type" type="varchar(255)">
                 <constraints nullable="false" />
+            </column>
+            <column name="jhi_order" type="integer">
+                <constraints nullable="true" />
             </column>
             <column name="pack_id" type="bigint">
                 <constraints nullable="true" />
@@ -39,17 +45,6 @@
 
     <changeSet id="20200327154000-1-relations" author="jhipster">
 
-        <createTable tableName="card_profile">
-            <column name="profile_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-            <column name="card_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
-        <addPrimaryKey columnNames="card_id, profile_id" tableName="card_profile"/>
-        
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
 
@@ -67,10 +62,12 @@
                   separator=";"
                   tableName="card">
             <column name="id" type="numeric"/>
-            <column name="name" type="string"/>
-            <column name="level" type="numeric"/>
+            <column name="display" type="string"/>
+            <column name="value_to_sort" type="string"/>
+            <column name="value_type" type="string"/>
             <column name="picture" type="blob"/>
             <column name="picture_content_type" type="string"/>
+            <column name="sorting_type" type="string"/>
             <column name="jhi_order" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->
         </loadData>

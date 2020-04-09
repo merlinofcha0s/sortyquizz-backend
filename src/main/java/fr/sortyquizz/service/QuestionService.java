@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -105,7 +104,7 @@ public class QuestionService {
 
         Pageable pageable = PageRequest.of(0, nbQuestions);
         log.debug("Request to get all Questions");
-        return questionRepository.findAllByLevel(level, pageable)
+        return questionRepository.findAll(pageable)
             .map(questionMapper::toDto);
     }
 }

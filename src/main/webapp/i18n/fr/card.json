@@ -16,11 +16,12 @@
       "detail": {
         "title": "Card"
       },
-      "name": "Name",
-      "level": "Level",
+      "display": "Display",
+      "valueToSort": "Value To Sort",
+      "valueType": "Value Type",
       "picture": "Picture",
+      "sortingType": "Sorting Type",
       "order": "Order",
-      "profile": "Profile",
       "pack": "Pack"
     }
   }

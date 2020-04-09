@@ -4,9 +4,16 @@ import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { IPack, Pack } from 'app/shared/model/pack.model';
 import { PackService } from './pack.service';
+import { IRule } from 'app/shared/model/rule.model';
+import { RuleService } from 'app/entities/rule/rule.service';
+import { ITheme } from 'app/shared/model/theme.model';
+import { ThemeService } from 'app/entities/theme/theme.service';
+
+type SelectableEntity = IRule | ITheme;
 
 @Component({
   selector: 'jhi-pack-update',
@@ -14,18 +21,54 @@ import { PackService } from './pack.service';
 })
 export class PackUpdateComponent implements OnInit {
   isSaving = false;
+  rules: IRule[] = [];
+  themes: ITheme[] = [];
 
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required]],
-    category: [null, [Validators.required]]
+    level: [null, [Validators.required]],
+    type: [null, [Validators.required]],
+    life: [null, [Validators.required]],
+    ruleId: [],
+    themeId: []
   });
 
-  constructor(protected packService: PackService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
+  constructor(
+    protected packService: PackService,
+    protected ruleService: RuleService,
+    protected themeService: ThemeService,
+    protected activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ pack }) => {
       this.updateForm(pack);
+
+      this.ruleService
+        .query({ filter: 'pack-is-null' })
+        .pipe(
+          map((res: HttpResponse<IRule[]>) => {
+            return res.body || [];
+          })
+        )
+        .subscribe((resBody: IRule[]) => {
+          if (!pack.ruleId) {
+            this.rules = resBody;
+          } else {
+            this.ruleService
+              .find(pack.ruleId)
+              .pipe(
+                map((subRes: HttpResponse<IRule>) => {
+                  return subRes.body ? [subRes.body].concat(resBody) : resBody;
+                })
+              )
+              .subscribe((concatRes: IRule[]) => (this.rules = concatRes));
+          }
+        });
+
+      this.themeService.query().subscribe((res: HttpResponse<ITheme[]>) => (this.themes = res.body || []));
     });
   }
 
@@ -33,7 +76,11 @@ export class PackUpdateComponent implements OnInit {
     this.editForm.patchValue({
       id: pack.id,
       name: pack.name,
-      category: pack.category
+      level: pack.level,
+      type: pack.type,
+      life: pack.life,
+      ruleId: pack.ruleId,
+      themeId: pack.themeId
     });
   }
 
@@ -56,7 +103,11 @@ export class PackUpdateComponent implements OnInit {
       ...new Pack(),
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
-      category: this.editForm.get(['category'])!.value
+      level: this.editForm.get(['level'])!.value,
+      type: this.editForm.get(['type'])!.value,
+      life: this.editForm.get(['life'])!.value,
+      ruleId: this.editForm.get(['ruleId'])!.value,
+      themeId: this.editForm.get(['themeId'])!.value
     };
   }
 
@@ -74,5 +125,9 @@ export class PackUpdateComponent implements OnInit {
 
   protected onSaveError(): void {
     this.isSaving = false;
+  }
+
+  trackById(index: number, item: SelectableEntity): any {
+    return item.id;
   }
 }

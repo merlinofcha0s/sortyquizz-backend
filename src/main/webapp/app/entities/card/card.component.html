@@ -23,9 +23,11 @@
             <thead>
                 <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="reset.bind(this)">
                     <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="name"><span jhiTranslate="sortyquizzApp.card.name">Name</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="level"><span jhiTranslate="sortyquizzApp.card.level">Level</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="display"><span jhiTranslate="sortyquizzApp.card.display">Display</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="valueToSort"><span jhiTranslate="sortyquizzApp.card.valueToSort">Value To Sort</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="valueType"><span jhiTranslate="sortyquizzApp.card.valueType">Value Type</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="picture"><span jhiTranslate="sortyquizzApp.card.picture">Picture</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="sortingType"><span jhiTranslate="sortyquizzApp.card.sortingType">Sorting Type</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="order"><span jhiTranslate="sortyquizzApp.card.order">Order</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="packName"><span jhiTranslate="sortyquizzApp.card.pack">Pack</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
@@ -34,12 +36,14 @@
             <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
                 <tr *ngFor="let card of cards ;trackBy: trackId">
                     <td><a [routerLink]="['/card', card.id, 'view']">{{ card.id }}</a></td>
-                    <td>{{ card.name }}</td>
-                    <td>{{ card.level }}</td>
+                    <td>{{ card.display }}</td>
+                    <td>{{ card.valueToSort }}</td>
+                    <td jhiTranslate="{{ 'sortyquizzApp.ValueType.' + card.valueType }}">{{ card.valueType }}</td>
                     <td>
                         <a *ngIf="card.picture" (click)="openFile(card.pictureContentType, card.picture)" jhiTranslate="entity.action.open">open</a>
                         <span *ngIf="card.picture">{{ card.pictureContentType }}, {{ byteSize(card.picture) }}</span>
                     </td>
+                    <td jhiTranslate="{{ 'sortyquizzApp.SortingType.' + card.sortingType }}">{{ card.sortingType }}</td>
                     <td>{{ card.order }}</td>
                     <td>
                         <div *ngIf="card.packId">

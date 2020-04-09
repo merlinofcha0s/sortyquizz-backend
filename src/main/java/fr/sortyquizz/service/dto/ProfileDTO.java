@@ -12,12 +12,8 @@ public class ProfileDTO implements Serializable {
     private Long id;
 
     @NotNull
-    private String level;
+    private Integer level;
 
-
-    private Long userId;
-
-    private String userLogin;
     
     public Long getId() {
         return id;
@@ -27,28 +23,12 @@ public class ProfileDTO implements Serializable {
         this.id = id;
     }
 
-    public String getLevel() {
+    public Integer getLevel() {
         return level;
     }
 
-    public void setLevel(String level) {
+    public void setLevel(Integer level) {
         this.level = level;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getUserLogin() {
-        return userLogin;
-    }
-
-    public void setUserLogin(String userLogin) {
-        this.userLogin = userLogin;
     }
 
     @Override
@@ -76,9 +56,7 @@ public class ProfileDTO implements Serializable {
     public String toString() {
         return "ProfileDTO{" +
             "id=" + getId() +
-            ", level='" + getLevel() + "'" +
-            ", userId=" + getUserId() +
-            ", userLogin='" + getUserLogin() + "'" +
+            ", level=" + getLevel() +
             "}";
     }
 }

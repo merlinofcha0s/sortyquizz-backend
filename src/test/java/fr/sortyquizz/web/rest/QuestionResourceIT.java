@@ -24,6 +24,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import fr.sortyquizz.domain.enumeration.QuestionType;
 /**
  * Integration tests for the {@link QuestionResource} REST controller.
  */
@@ -36,8 +37,8 @@ public class QuestionResourceIT {
     private static final String DEFAULT_QUESTION = "AAAAAAAAAA";
     private static final String UPDATED_QUESTION = "BBBBBBBBBB";
 
-    private static final Integer DEFAULT_LEVEL = 1;
-    private static final Integer UPDATED_LEVEL = 2;
+    private static final QuestionType DEFAULT_TYPE = QuestionType.MULTIPLE_CHOICE;
+    private static final QuestionType UPDATED_TYPE = QuestionType.SIMPLE;
 
     @Autowired
     private QuestionRepository questionRepository;
@@ -65,7 +66,7 @@ public class QuestionResourceIT {
     public static Question createEntity(EntityManager em) {
         Question question = new Question()
             .question(DEFAULT_QUESTION)
-            .level(DEFAULT_LEVEL);
+            .type(DEFAULT_TYPE);
         return question;
     }
     /**
@@ -77,7 +78,7 @@ public class QuestionResourceIT {
     public static Question createUpdatedEntity(EntityManager em) {
         Question question = new Question()
             .question(UPDATED_QUESTION)
-            .level(UPDATED_LEVEL);
+            .type(UPDATED_TYPE);
         return question;
     }
 
@@ -103,7 +104,7 @@ public class QuestionResourceIT {
         assertThat(questionList).hasSize(databaseSizeBeforeCreate + 1);
         Question testQuestion = questionList.get(questionList.size() - 1);
         assertThat(testQuestion.getQuestion()).isEqualTo(DEFAULT_QUESTION);
-        assertThat(testQuestion.getLevel()).isEqualTo(DEFAULT_LEVEL);
+        assertThat(testQuestion.getType()).isEqualTo(DEFAULT_TYPE);
     }
 
     @Test
@@ -148,10 +149,10 @@ public class QuestionResourceIT {
 
     @Test
     @Transactional
-    public void checkLevelIsRequired() throws Exception {
+    public void checkTypeIsRequired() throws Exception {
         int databaseSizeBeforeTest = questionRepository.findAll().size();
         // set the field null
-        question.setLevel(null);
+        question.setType(null);
 
         // Create the Question, which fails.
         QuestionDTO questionDTO = questionMapper.toDto(question);
@@ -177,7 +178,7 @@ public class QuestionResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(question.getId().intValue())))
             .andExpect(jsonPath("$.[*].question").value(hasItem(DEFAULT_QUESTION)))
-            .andExpect(jsonPath("$.[*].level").value(hasItem(DEFAULT_LEVEL)));
+            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())));
     }
     
     @Test
@@ -192,7 +193,7 @@ public class QuestionResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(question.getId().intValue()))
             .andExpect(jsonPath("$.question").value(DEFAULT_QUESTION))
-            .andExpect(jsonPath("$.level").value(DEFAULT_LEVEL));
+            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()));
     }
 
     @Test
@@ -217,7 +218,7 @@ public class QuestionResourceIT {
         em.detach(updatedQuestion);
         updatedQuestion
             .question(UPDATED_QUESTION)
-            .level(UPDATED_LEVEL);
+            .type(UPDATED_TYPE);
         QuestionDTO questionDTO = questionMapper.toDto(updatedQuestion);
 
         restQuestionMockMvc.perform(put("/api/questions")
@@ -230,7 +231,7 @@ public class QuestionResourceIT {
         assertThat(questionList).hasSize(databaseSizeBeforeUpdate);
         Question testQuestion = questionList.get(questionList.size() - 1);
         assertThat(testQuestion.getQuestion()).isEqualTo(UPDATED_QUESTION);
-        assertThat(testQuestion.getLevel()).isEqualTo(UPDATED_LEVEL);
+        assertThat(testQuestion.getType()).isEqualTo(UPDATED_TYPE);
     }
 
     @Test

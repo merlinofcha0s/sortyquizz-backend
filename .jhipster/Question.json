@@ -9,8 +9,9 @@
             ]
         },
         {
-            "fieldName": "level",
-            "fieldType": "Integer",
+            "fieldName": "type",
+            "fieldType": "QuestionType",
+            "fieldValues": "MULTIPLE_CHOICE,SIMPLE,SORT",
             "fieldValidateRules": [
                 "required"
             ]

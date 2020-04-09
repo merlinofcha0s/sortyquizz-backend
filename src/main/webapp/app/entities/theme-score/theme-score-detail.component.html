@@ -1,0 +1,46 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="themeScore">
+            <h2><span jhiTranslate="sortyquizzApp.themeScore.detail.title">Theme Score</span> {{ themeScore.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="sortyquizzApp.themeScore.xp">Xp</span></dt>
+                <dd>
+                    <span>{{ themeScore.xp }}</span>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.themeScore.level">Level</span></dt>
+                <dd>
+                    <span>{{ themeScore.level }}</span>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.themeScore.profile">Profile</span></dt>
+                <dd>
+                    <div *ngIf="themeScore.profileId">
+                        <a [routerLink]="['/profile', themeScore.profileId, 'view']">{{ themeScore.profileId }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.themeScore.theme">Theme</span></dt>
+                <dd>
+                    <div *ngIf="themeScore.themeId">
+                        <a [routerLink]="['/theme', themeScore.themeId, 'view']">{{ themeScore.themeId }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/theme-score', themeScore.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

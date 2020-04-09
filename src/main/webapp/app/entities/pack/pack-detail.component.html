@@ -12,9 +12,29 @@
                 <dd>
                     <span>{{ pack.name }}</span>
                 </dd>
-                <dt><span jhiTranslate="sortyquizzApp.pack.category">Category</span></dt>
+                <dt><span jhiTranslate="sortyquizzApp.pack.level">Level</span></dt>
                 <dd>
-                    <span>{{ pack.category }}</span>
+                    <span>{{ pack.level }}</span>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.pack.type">Type</span></dt>
+                <dd>
+                    <span jhiTranslate="{{ 'sortyquizzApp.PackType.' + pack.type }}">{{ pack.type }}</span>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.pack.life">Life</span></dt>
+                <dd>
+                    <span>{{ pack.life }}</span>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.pack.rule">Rule</span></dt>
+                <dd>
+                    <div *ngIf="pack.ruleId">
+                        <a [routerLink]="['/rule', pack.ruleId, 'view']">{{ pack.ruleId }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="sortyquizzApp.pack.theme">Theme</span></dt>
+                <dd>
+                    <div *ngIf="pack.themeId">
+                        <a [routerLink]="['/theme', pack.themeId, 'view']">{{ pack.themeId }}</a>
+                    </div>
                 </dd>
             </dl>
 

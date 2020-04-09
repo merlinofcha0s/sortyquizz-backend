@@ -1,0 +1,68 @@
+{
+    "name": "UserPack",
+    "fields": [
+        {
+            "fieldName": "state",
+            "fieldType": "PackState",
+            "fieldValues": "OPEN,COMPLETED,RECYCLED",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "lifeLeft",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "nbQuestionsToSucceed",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "timeAtQuizzStep",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "timeAtSortingStep",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "profile",
+            "otherEntityRelationshipName": "userPack",
+            "relationshipName": "profile",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "pack",
+            "otherEntityRelationshipName": "userPack",
+            "relationshipName": "pack",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20200409091900",
+    "entityTableName": "user_pack",
+    "dto": "mapstruct",
+    "pagination": "infinite-scroll",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "readOnly": false,
+    "embedded": false,
+    "clientRootFolder": "",
+    "applications": "*"
+}

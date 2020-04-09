@@ -24,17 +24,16 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="sortyquizzApp.question.level" for="field_level">Level</label>
-                    <input type="number" class="form-control" name="level" id="field_level"
-                           formControlName="level"/>
-                    <div *ngIf="editForm.get('level')!.invalid && (editForm.get('level')!.dirty || editForm.get('level')!.touched)">
+                    <label class="form-control-label" jhiTranslate="sortyquizzApp.question.type" for="field_type">Type</label>
+                    <select class="form-control" name="type" formControlName="type" id="field_type">
+                        <option value="MULTIPLE_CHOICE">{{ 'sortyquizzApp.QuestionType.MULTIPLE_CHOICE' | translate }}</option>
+                        <option value="SIMPLE">{{ 'sortyquizzApp.QuestionType.SIMPLE' | translate }}</option>
+                        <option value="SORT">{{ 'sortyquizzApp.QuestionType.SORT' | translate }}</option>
+                    </select>
+                    <div *ngIf="editForm.get('type')!.invalid && (editForm.get('type')!.dirty || editForm.get('type')!.touched)">
                         <small class="form-text text-danger"
-                               *ngIf="editForm.get('level')?.errors?.required" jhiTranslate="entity.validation.required">
+                               *ngIf="editForm.get('type')?.errors?.required" jhiTranslate="entity.validation.required">
                         This field is required.
-                        </small>
-                        <small class="form-text text-danger"
-                            [hidden]="!editForm.get('level')?.errors?.number" jhiTranslate="entity.validation.number">
-                            This field should be a number.
                         </small>
                     </div>
                 </div>

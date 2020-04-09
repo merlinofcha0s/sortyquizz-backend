@@ -2,7 +2,6 @@ package fr.sortyquizz.web.rest;
 
 import fr.sortyquizz.SortyquizzApp;
 import fr.sortyquizz.domain.Profile;
-import fr.sortyquizz.domain.User;
 import fr.sortyquizz.repository.ProfileRepository;
 import fr.sortyquizz.service.ProfileService;
 import fr.sortyquizz.service.dto.ProfileDTO;
@@ -34,8 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser
 public class ProfileResourceIT {
 
-    private static final String DEFAULT_LEVEL = "AAAAAAAAAA";
-    private static final String UPDATED_LEVEL = "BBBBBBBBBB";
+    private static final Integer DEFAULT_LEVEL = 1;
+    private static final Integer UPDATED_LEVEL = 2;
 
     @Autowired
     private ProfileRepository profileRepository;
@@ -63,11 +62,6 @@ public class ProfileResourceIT {
     public static Profile createEntity(EntityManager em) {
         Profile profile = new Profile()
             .level(DEFAULT_LEVEL);
-        // Add required entity
-        User user = UserResourceIT.createEntity(em);
-        em.persist(user);
-        em.flush();
-        profile.setUser(user);
         return profile;
     }
     /**
@@ -79,11 +73,6 @@ public class ProfileResourceIT {
     public static Profile createUpdatedEntity(EntityManager em) {
         Profile profile = new Profile()
             .level(UPDATED_LEVEL);
-        // Add required entity
-        User user = UserResourceIT.createEntity(em);
-        em.persist(user);
-        em.flush();
-        profile.setUser(user);
         return profile;
     }
 

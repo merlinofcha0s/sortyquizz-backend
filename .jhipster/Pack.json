@@ -9,14 +9,37 @@
             ]
         },
         {
-            "fieldName": "category",
-            "fieldType": "String",
+            "fieldName": "level",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "type",
+            "fieldType": "PackType",
+            "fieldValues": "FREE,PREMIUM",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "life",
+            "fieldType": "Integer",
             "fieldValidateRules": [
                 "required"
             ]
         }
     ],
     "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "otherEntityName": "rule",
+            "otherEntityRelationshipName": "pack",
+            "relationshipName": "rule",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
         {
             "relationshipType": "one-to-many",
             "otherEntityName": "question",
@@ -28,6 +51,19 @@
             "otherEntityName": "card",
             "otherEntityRelationshipName": "pack",
             "relationshipName": "card"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "userPack",
+            "otherEntityRelationshipName": "pack",
+            "relationshipName": "userPack"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "theme",
+            "otherEntityRelationshipName": "pack",
+            "relationshipName": "theme",
+            "otherEntityField": "id"
         }
     ],
     "changelogDate": "20200327154100",

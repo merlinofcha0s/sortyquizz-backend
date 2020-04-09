@@ -4,7 +4,6 @@ import fr.sortyquizz.domain.Profile;
 import fr.sortyquizz.domain.User;
 import fr.sortyquizz.repository.ProfileRepository;
 import fr.sortyquizz.service.dto.ProfileDTO;
-import fr.sortyquizz.service.dto.UserDTO;
 import fr.sortyquizz.service.mapper.ProfileMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,7 +89,7 @@ public class ProfileService {
      */
     public void deleteByUserId(Long userId) {
         log.debug("Request to delete Profile for user : {}", userId);
-        profileRepository.deleteByUserId(userId);
+//        profileRepository.deleteByUserId(userId);
     }
 
     /**
@@ -102,8 +101,8 @@ public class ProfileService {
     public ProfileDTO createForUser(User user) {
         log.debug("Request to create new profile for : {}", user);
         Profile profile = new Profile();
-        profile.setLevel("1");
-        profile.setUser(user);
+        profile.setLevel(1);
+//        profile.setUser(user);
         ProfileDTO newProfileCreated = profileMapper.toDto(profile);
         return save(newProfileCreated);
     }

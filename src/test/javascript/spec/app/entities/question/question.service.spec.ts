@@ -2,6 +2,7 @@ import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { QuestionService } from 'app/entities/question/question.service';
 import { IQuestion, Question } from 'app/shared/model/question.model';
+import { QuestionType } from 'app/shared/model/enumerations/question-type.model';
 
 describe('Service Tests', () => {
   describe('Question Service', () => {
@@ -20,7 +21,7 @@ describe('Service Tests', () => {
       service = injector.get(QuestionService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new Question(0, 'AAAAAAA', 0);
+      elemDefault = new Question(0, 'AAAAAAA', QuestionType.MULTIPLE_CHOICE);
     });
 
     describe('Service methods', () => {
@@ -55,7 +56,7 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             question: 'BBBBBB',
-            level: 1
+            type: 'BBBBBB'
           },
           elemDefault
         );
@@ -73,7 +74,7 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             question: 'BBBBBB',
-            level: 1
+            type: 'BBBBBB'
           },
           elemDefault
         );

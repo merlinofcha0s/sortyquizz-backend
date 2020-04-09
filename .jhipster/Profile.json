@@ -3,7 +3,7 @@
     "fields": [
         {
             "fieldName": "level",
-            "fieldType": "String",
+            "fieldType": "Integer",
             "fieldValidateRules": [
                 "required"
             ]
@@ -11,24 +11,16 @@
     ],
     "relationships": [
         {
-            "relationshipType": "many-to-many",
-            "otherEntityName": "card",
+            "relationshipType": "one-to-many",
+            "otherEntityName": "userPack",
             "otherEntityRelationshipName": "profile",
-            "relationshipName": "card",
-            "otherEntityField": "id",
-            "ownerSide": false
+            "relationshipName": "userPack"
         },
         {
-            "relationshipName": "user",
-            "otherEntityName": "user",
-            "relationshipType": "one-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "login",
-            "ownerSide": true,
-            "useJPADerivedIdentifier": false,
-            "otherEntityRelationshipName": "profile"
+            "relationshipType": "one-to-many",
+            "otherEntityName": "themeScore",
+            "otherEntityRelationshipName": "profile",
+            "relationshipName": "themeScore"
         }
     ],
     "changelogDate": "20200327153900",

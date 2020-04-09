@@ -9,48 +9,49 @@ import fr.sortyquizz.service.mapper.CardMapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import fr.sortyquizz.domain.enumeration.ValueType;
+import fr.sortyquizz.domain.enumeration.SortingType;
 /**
  * Integration tests for the {@link CardResource} REST controller.
  */
 @SpringBootTest(classes = SortyquizzApp.class)
-@ExtendWith(MockitoExtension.class)
+
 @AutoConfigureMockMvc
 @WithMockUser
 public class CardResourceIT {
 
-    private static final String DEFAULT_NAME = "AAAAAAAAAA";
-    private static final String UPDATED_NAME = "BBBBBBBBBB";
+    private static final String DEFAULT_DISPLAY = "AAAAAAAAAA";
+    private static final String UPDATED_DISPLAY = "BBBBBBBBBB";
 
-    private static final Integer DEFAULT_LEVEL = 1;
-    private static final Integer UPDATED_LEVEL = 2;
+    private static final String DEFAULT_VALUE_TO_SORT = "AAAAAAAAAA";
+    private static final String UPDATED_VALUE_TO_SORT = "BBBBBBBBBB";
+
+    private static final ValueType DEFAULT_VALUE_TYPE = ValueType.DATE;
+    private static final ValueType UPDATED_VALUE_TYPE = ValueType.NUMBER;
 
     private static final byte[] DEFAULT_PICTURE = TestUtil.createByteArray(1, "0");
     private static final byte[] UPDATED_PICTURE = TestUtil.createByteArray(1, "1");
     private static final String DEFAULT_PICTURE_CONTENT_TYPE = "image/jpg";
     private static final String UPDATED_PICTURE_CONTENT_TYPE = "image/png";
+
+    private static final SortingType DEFAULT_SORTING_TYPE = SortingType.NATURAL;
+    private static final SortingType UPDATED_SORTING_TYPE = SortingType.MANUAL;
 
     private static final Integer DEFAULT_ORDER = 1;
     private static final Integer UPDATED_ORDER = 2;
@@ -58,14 +59,8 @@ public class CardResourceIT {
     @Autowired
     private CardRepository cardRepository;
 
-    @Mock
-    private CardRepository cardRepositoryMock;
-
     @Autowired
     private CardMapper cardMapper;
-
-    @Mock
-    private CardService cardServiceMock;
 
     @Autowired
     private CardService cardService;
@@ -86,10 +81,12 @@ public class CardResourceIT {
      */
     public static Card createEntity(EntityManager em) {
         Card card = new Card()
-            .name(DEFAULT_NAME)
-            .level(DEFAULT_LEVEL)
+            .display(DEFAULT_DISPLAY)
+            .valueToSort(DEFAULT_VALUE_TO_SORT)
+            .valueType(DEFAULT_VALUE_TYPE)
             .picture(DEFAULT_PICTURE)
             .pictureContentType(DEFAULT_PICTURE_CONTENT_TYPE)
+            .sortingType(DEFAULT_SORTING_TYPE)
             .order(DEFAULT_ORDER);
         return card;
     }
@@ -101,10 +98,12 @@ public class CardResourceIT {
      */
     public static Card createUpdatedEntity(EntityManager em) {
         Card card = new Card()
-            .name(UPDATED_NAME)
-            .level(UPDATED_LEVEL)
+            .display(UPDATED_DISPLAY)
+            .valueToSort(UPDATED_VALUE_TO_SORT)
+            .valueType(UPDATED_VALUE_TYPE)
             .picture(UPDATED_PICTURE)
             .pictureContentType(UPDATED_PICTURE_CONTENT_TYPE)
+            .sortingType(UPDATED_SORTING_TYPE)
             .order(UPDATED_ORDER);
         return card;
     }
@@ -130,10 +129,12 @@ public class CardResourceIT {
         List<Card> cardList = cardRepository.findAll();
         assertThat(cardList).hasSize(databaseSizeBeforeCreate + 1);
         Card testCard = cardList.get(cardList.size() - 1);
-        assertThat(testCard.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testCard.getLevel()).isEqualTo(DEFAULT_LEVEL);
+        assertThat(testCard.getDisplay()).isEqualTo(DEFAULT_DISPLAY);
+        assertThat(testCard.getValueToSort()).isEqualTo(DEFAULT_VALUE_TO_SORT);
+        assertThat(testCard.getValueType()).isEqualTo(DEFAULT_VALUE_TYPE);
         assertThat(testCard.getPicture()).isEqualTo(DEFAULT_PICTURE);
         assertThat(testCard.getPictureContentType()).isEqualTo(DEFAULT_PICTURE_CONTENT_TYPE);
+        assertThat(testCard.getSortingType()).isEqualTo(DEFAULT_SORTING_TYPE);
         assertThat(testCard.getOrder()).isEqualTo(DEFAULT_ORDER);
     }
 
@@ -160,10 +161,10 @@ public class CardResourceIT {
 
     @Test
     @Transactional
-    public void checkNameIsRequired() throws Exception {
+    public void checkDisplayIsRequired() throws Exception {
         int databaseSizeBeforeTest = cardRepository.findAll().size();
         // set the field null
-        card.setName(null);
+        card.setDisplay(null);
 
         // Create the Card, which fails.
         CardDTO cardDTO = cardMapper.toDto(card);
@@ -179,10 +180,10 @@ public class CardResourceIT {
 
     @Test
     @Transactional
-    public void checkLevelIsRequired() throws Exception {
+    public void checkValueToSortIsRequired() throws Exception {
         int databaseSizeBeforeTest = cardRepository.findAll().size();
         // set the field null
-        card.setLevel(null);
+        card.setValueToSort(null);
 
         // Create the Card, which fails.
         CardDTO cardDTO = cardMapper.toDto(card);
@@ -198,10 +199,29 @@ public class CardResourceIT {
 
     @Test
     @Transactional
-    public void checkOrderIsRequired() throws Exception {
+    public void checkValueTypeIsRequired() throws Exception {
         int databaseSizeBeforeTest = cardRepository.findAll().size();
         // set the field null
-        card.setOrder(null);
+        card.setValueType(null);
+
+        // Create the Card, which fails.
+        CardDTO cardDTO = cardMapper.toDto(card);
+
+        restCardMockMvc.perform(post("/api/cards")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(cardDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Card> cardList = cardRepository.findAll();
+        assertThat(cardList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkSortingTypeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = cardRepository.findAll().size();
+        // set the field null
+        card.setSortingType(null);
 
         // Create the Card, which fails.
         CardDTO cardDTO = cardMapper.toDto(card);
@@ -226,33 +246,15 @@ public class CardResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(card.getId().intValue())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].level").value(hasItem(DEFAULT_LEVEL)))
+            .andExpect(jsonPath("$.[*].display").value(hasItem(DEFAULT_DISPLAY)))
+            .andExpect(jsonPath("$.[*].valueToSort").value(hasItem(DEFAULT_VALUE_TO_SORT)))
+            .andExpect(jsonPath("$.[*].valueType").value(hasItem(DEFAULT_VALUE_TYPE.toString())))
             .andExpect(jsonPath("$.[*].pictureContentType").value(hasItem(DEFAULT_PICTURE_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].picture").value(hasItem(Base64Utils.encodeToString(DEFAULT_PICTURE))))
+            .andExpect(jsonPath("$.[*].sortingType").value(hasItem(DEFAULT_SORTING_TYPE.toString())))
             .andExpect(jsonPath("$.[*].order").value(hasItem(DEFAULT_ORDER)));
     }
     
-    @SuppressWarnings({"unchecked"})
-    public void getAllCardsWithEagerRelationshipsIsEnabled() throws Exception {
-        when(cardServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restCardMockMvc.perform(get("/api/cards?eagerload=true"))
-            .andExpect(status().isOk());
-
-        verify(cardServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({"unchecked"})
-    public void getAllCardsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(cardServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restCardMockMvc.perform(get("/api/cards?eagerload=true"))
-            .andExpect(status().isOk());
-
-        verify(cardServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
     @Test
     @Transactional
     public void getCard() throws Exception {
@@ -264,10 +266,12 @@ public class CardResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(card.getId().intValue()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.level").value(DEFAULT_LEVEL))
+            .andExpect(jsonPath("$.display").value(DEFAULT_DISPLAY))
+            .andExpect(jsonPath("$.valueToSort").value(DEFAULT_VALUE_TO_SORT))
+            .andExpect(jsonPath("$.valueType").value(DEFAULT_VALUE_TYPE.toString()))
             .andExpect(jsonPath("$.pictureContentType").value(DEFAULT_PICTURE_CONTENT_TYPE))
             .andExpect(jsonPath("$.picture").value(Base64Utils.encodeToString(DEFAULT_PICTURE)))
+            .andExpect(jsonPath("$.sortingType").value(DEFAULT_SORTING_TYPE.toString()))
             .andExpect(jsonPath("$.order").value(DEFAULT_ORDER));
     }
 
@@ -292,10 +296,12 @@ public class CardResourceIT {
         // Disconnect from session so that the updates on updatedCard are not directly saved in db
         em.detach(updatedCard);
         updatedCard
-            .name(UPDATED_NAME)
-            .level(UPDATED_LEVEL)
+            .display(UPDATED_DISPLAY)
+            .valueToSort(UPDATED_VALUE_TO_SORT)
+            .valueType(UPDATED_VALUE_TYPE)
             .picture(UPDATED_PICTURE)
             .pictureContentType(UPDATED_PICTURE_CONTENT_TYPE)
+            .sortingType(UPDATED_SORTING_TYPE)
             .order(UPDATED_ORDER);
         CardDTO cardDTO = cardMapper.toDto(updatedCard);
 
@@ -308,10 +314,12 @@ public class CardResourceIT {
         List<Card> cardList = cardRepository.findAll();
         assertThat(cardList).hasSize(databaseSizeBeforeUpdate);
         Card testCard = cardList.get(cardList.size() - 1);
-        assertThat(testCard.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testCard.getLevel()).isEqualTo(UPDATED_LEVEL);
+        assertThat(testCard.getDisplay()).isEqualTo(UPDATED_DISPLAY);
+        assertThat(testCard.getValueToSort()).isEqualTo(UPDATED_VALUE_TO_SORT);
+        assertThat(testCard.getValueType()).isEqualTo(UPDATED_VALUE_TYPE);
         assertThat(testCard.getPicture()).isEqualTo(UPDATED_PICTURE);
         assertThat(testCard.getPictureContentType()).isEqualTo(UPDATED_PICTURE_CONTENT_TYPE);
+        assertThat(testCard.getSortingType()).isEqualTo(UPDATED_SORTING_TYPE);
         assertThat(testCard.getOrder()).isEqualTo(UPDATED_ORDER);
     }
 

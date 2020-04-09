@@ -20,7 +20,7 @@ describe('Service Tests', () => {
       service = injector.get(ProfileService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new Profile(0, 'AAAAAAA');
+      elemDefault = new Profile(0, 0);
     });
 
     describe('Service methods', () => {
@@ -54,7 +54,7 @@ describe('Service Tests', () => {
       it('should update a Profile', () => {
         const returnedFromService = Object.assign(
           {
-            level: 'BBBBBB'
+            level: 1
           },
           elemDefault
         );
@@ -71,7 +71,7 @@ describe('Service Tests', () => {
       it('should return a list of Profile', () => {
         const returnedFromService = Object.assign(
           {
-            level: 'BBBBBB'
+            level: 1
           },
           elemDefault
         );

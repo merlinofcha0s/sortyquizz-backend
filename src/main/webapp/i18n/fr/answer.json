@@ -18,6 +18,7 @@
       },
       "answer": "Answer",
       "order": "Order",
+      "isTheRightAnswer": "Is The Right Answer",
       "question": "Question"
     }
   }

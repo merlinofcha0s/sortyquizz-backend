@@ -14,8 +14,10 @@ public class AnswerDTO implements Serializable {
     @NotNull
     private String answer;
 
-    @NotNull
     private Integer order;
+
+    private Boolean isTheRightAnswer;
+
 
     private Long questionId;
 
@@ -53,6 +55,14 @@ public class AnswerDTO implements Serializable {
         this.order = order;
     }
 
+    public Boolean isIsTheRightAnswer() {
+        return isTheRightAnswer;
+    }
+
+    public void setIsTheRightAnswer(Boolean isTheRightAnswer) {
+        this.isTheRightAnswer = isTheRightAnswer;
+    }
+
     public Long getQuestionId() {
         return questionId;
     }
@@ -88,6 +98,7 @@ public class AnswerDTO implements Serializable {
             "id=" + getId() +
             ", answer='" + getAnswer() + "'" +
             ", order=" + getOrder() +
+            ", isTheRightAnswer='" + isIsTheRightAnswer() + "'" +
             ", questionId=" + getQuestionId() +
             "}";
     }

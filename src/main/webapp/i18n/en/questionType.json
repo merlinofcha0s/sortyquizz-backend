@@ -1,0 +1,10 @@
+{
+  "sortyquizzApp": {
+    "QuestionType": {
+      "null": "",
+      "MULTIPLE_CHOICE": "MULTIPLE_CHOICE",
+      "SIMPLE": "SIMPLE",
+      "SORT": "SORT"
+    }
+  }
+}

@@ -2,6 +2,8 @@ import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { CardService } from 'app/entities/card/card.service';
 import { ICard, Card } from 'app/shared/model/card.model';
+import { ValueType } from 'app/shared/model/enumerations/value-type.model';
+import { SortingType } from 'app/shared/model/enumerations/sorting-type.model';
 
 describe('Service Tests', () => {
   describe('Card Service', () => {
@@ -20,7 +22,7 @@ describe('Service Tests', () => {
       service = injector.get(CardService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new Card(0, 'AAAAAAA', 0, 'image/png', 'AAAAAAA', 0);
+      elemDefault = new Card(0, 'AAAAAAA', 'AAAAAAA', ValueType.DATE, 'image/png', 'AAAAAAA', SortingType.NATURAL, 0);
     });
 
     describe('Service methods', () => {
@@ -54,9 +56,11 @@ describe('Service Tests', () => {
       it('should update a Card', () => {
         const returnedFromService = Object.assign(
           {
-            name: 'BBBBBB',
-            level: 1,
+            display: 'BBBBBB',
+            valueToSort: 'BBBBBB',
+            valueType: 'BBBBBB',
             picture: 'BBBBBB',
+            sortingType: 'BBBBBB',
             order: 1
           },
           elemDefault
@@ -74,9 +78,11 @@ describe('Service Tests', () => {
       it('should return a list of Card', () => {
         const returnedFromService = Object.assign(
           {
-            name: 'BBBBBB',
-            level: 1,
+            display: 'BBBBBB',
+            valueToSort: 'BBBBBB',
+            valueType: 'BBBBBB',
             picture: 'BBBBBB',
+            sortingType: 'BBBBBB',
             order: 1
           },
           elemDefault

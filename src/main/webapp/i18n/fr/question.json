@@ -17,7 +17,7 @@
         "title": "Question"
       },
       "question": "Question",
-      "level": "Level",
+      "type": "Type",
       "answer": "Answer",
       "pack": "Pack"
     }

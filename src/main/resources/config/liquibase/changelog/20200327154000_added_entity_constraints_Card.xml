@@ -8,18 +8,6 @@
     -->
     <changeSet id="20200327154000-2" author="jhipster">
         
-        <addForeignKeyConstraint baseColumnNames="card_id"
-                                 baseTableName="card_profile"
-                                 constraintName="fk_card_profile_card_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="card"/>
-
-        <addForeignKeyConstraint baseColumnNames="profile_id"
-                                 baseTableName="card_profile"
-                                 constraintName="fk_card_profile_profile_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="profile"/>
-        
         <addForeignKeyConstraint baseColumnNames="pack_id"
                                  baseTableName="card"
                                  constraintName="fk_card_pack_id"

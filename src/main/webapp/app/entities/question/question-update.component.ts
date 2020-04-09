@@ -21,7 +21,7 @@ export class QuestionUpdateComponent implements OnInit {
   editForm = this.fb.group({
     id: [],
     question: [null, [Validators.required]],
-    level: [null, [Validators.required]],
+    type: [null, [Validators.required]],
     packId: []
   });
 
@@ -44,7 +44,7 @@ export class QuestionUpdateComponent implements OnInit {
     this.editForm.patchValue({
       id: question.id,
       question: question.question,
-      level: question.level,
+      type: question.type,
       packId: question.packId
     });
   }
@@ -68,7 +68,7 @@ export class QuestionUpdateComponent implements OnInit {
       ...new Question(),
       id: this.editForm.get(['id'])!.value,
       question: this.editForm.get(['question'])!.value,
-      level: this.editForm.get(['level'])!.value,
+      type: this.editForm.get(['type'])!.value,
       packId: this.editForm.get(['packId'])!.value
     };
   }

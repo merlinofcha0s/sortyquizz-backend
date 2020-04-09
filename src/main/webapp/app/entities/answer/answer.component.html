@@ -25,6 +25,7 @@
                     <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="answer"><span jhiTranslate="sortyquizzApp.answer.answer">Answer</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="order"><span jhiTranslate="sortyquizzApp.answer.order">Order</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="isTheRightAnswer"><span jhiTranslate="sortyquizzApp.answer.isTheRightAnswer">Is The Right Answer</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="questionName"><span jhiTranslate="sortyquizzApp.answer.question">Question</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
@@ -34,6 +35,7 @@
                     <td><a [routerLink]="['/answer', answer.id, 'view']">{{ answer.id }}</a></td>
                     <td>{{ answer.answer }}</td>
                     <td>{{ answer.order }}</td>
+                    <td>{{ answer.isTheRightAnswer }}</td>
                     <td>
                         <div *ngIf="answer.questionId">
                             <a [routerLink]="['/question', answer.questionId , 'view']" >{{ answer.question }}</a>

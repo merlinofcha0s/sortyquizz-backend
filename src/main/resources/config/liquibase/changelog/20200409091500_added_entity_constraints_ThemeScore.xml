@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <!--
+        Added the constraints for entity ThemeScore.
+    -->
+    <changeSet id="20200409091500-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="profile_id"
+                                 baseTableName="theme_score"
+                                 constraintName="fk_theme_score_profile_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="profile"/>
+
+        <addForeignKeyConstraint baseColumnNames="theme_id"
+                                 baseTableName="theme_score"
+                                 constraintName="fk_theme_score_theme_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="theme"/>
+
+    </changeSet>
+</databaseChangeLog>

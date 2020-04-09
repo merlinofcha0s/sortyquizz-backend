@@ -12,9 +12,9 @@
                 <dd>
                     <span>{{ question.question }}</span>
                 </dd>
-                <dt><span jhiTranslate="sortyquizzApp.question.level">Level</span></dt>
+                <dt><span jhiTranslate="sortyquizzApp.question.type">Type</span></dt>
                 <dd>
-                    <span>{{ question.level }}</span>
+                    <span jhiTranslate="{{ 'sortyquizzApp.QuestionType.' + question.type }}">{{ question.type }}</span>
                 </dd>
                 <dt><span jhiTranslate="sortyquizzApp.question.pack">Pack</span></dt>
                 <dd>

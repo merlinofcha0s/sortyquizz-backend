@@ -17,8 +17,8 @@
         "title": "Profile"
       },
       "level": "Level",
-      "card": "Card",
-      "user": "User"
+      "userPack": "User Pack",
+      "themeScore": "Theme Score"
     }
   }
 }

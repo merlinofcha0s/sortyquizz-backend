@@ -1,0 +1,10 @@
+{
+  "sortyquizzApp": {
+    "PackState": {
+      "null": "",
+      "OPEN": "OPEN",
+      "COMPLETED": "COMPLETED",
+      "RECYCLED": "RECYCLED"
+    }
+  }
+}

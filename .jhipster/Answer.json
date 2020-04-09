@@ -10,10 +10,11 @@
         },
         {
             "fieldName": "order",
-            "fieldType": "Integer",
-            "fieldValidateRules": [
-                "required"
-            ]
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "isTheRightAnswer",
+            "fieldType": "Boolean"
         }
     ],
     "relationships": [

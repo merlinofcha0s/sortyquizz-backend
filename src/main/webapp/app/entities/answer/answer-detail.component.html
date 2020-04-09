@@ -16,6 +16,10 @@
                 <dd>
                     <span>{{ answer.order }}</span>
                 </dd>
+                <dt><span jhiTranslate="sortyquizzApp.answer.isTheRightAnswer">Is The Right Answer</span></dt>
+                <dd>
+                    <span>{{ answer.isTheRightAnswer }}</span>
+                </dd>
                 <dt><span jhiTranslate="sortyquizzApp.answer.question">Question</span></dt>
                 <dd>
                     <div *ngIf="answer.questionId">

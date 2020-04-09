@@ -24,15 +24,65 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="sortyquizzApp.pack.category" for="field_category">Category</label>
-                    <input type="text" class="form-control" name="category" id="field_category"
-                           formControlName="category"/>
-                    <div *ngIf="editForm.get('category')!.invalid && (editForm.get('category')!.dirty || editForm.get('category')!.touched)">
+                    <label class="form-control-label" jhiTranslate="sortyquizzApp.pack.level" for="field_level">Level</label>
+                    <input type="number" class="form-control" name="level" id="field_level"
+                           formControlName="level"/>
+                    <div *ngIf="editForm.get('level')!.invalid && (editForm.get('level')!.dirty || editForm.get('level')!.touched)">
                         <small class="form-text text-danger"
-                               *ngIf="editForm.get('category')?.errors?.required" jhiTranslate="entity.validation.required">
+                               *ngIf="editForm.get('level')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.get('level')?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="sortyquizzApp.pack.type" for="field_type">Type</label>
+                    <select class="form-control" name="type" formControlName="type" id="field_type">
+                        <option value="FREE">{{ 'sortyquizzApp.PackType.FREE' | translate }}</option>
+                        <option value="PREMIUM">{{ 'sortyquizzApp.PackType.PREMIUM' | translate }}</option>
+                    </select>
+                    <div *ngIf="editForm.get('type')!.invalid && (editForm.get('type')!.dirty || editForm.get('type')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('type')?.errors?.required" jhiTranslate="entity.validation.required">
                         This field is required.
                         </small>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="sortyquizzApp.pack.life" for="field_life">Life</label>
+                    <input type="number" class="form-control" name="life" id="field_life"
+                           formControlName="life"/>
+                    <div *ngIf="editForm.get('life')!.invalid && (editForm.get('life')!.dirty || editForm.get('life')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('life')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.get('life')?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="sortyquizzApp.pack.rule" for="field_rule">Rule</label>
+                    <select class="form-control" id="field_rule" name="rule" formControlName="ruleId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="ruleOption.id" *ngFor="let ruleOption of rules; trackBy: trackById">{{ ruleOption.id }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="sortyquizzApp.pack.theme" for="field_theme">Theme</label>
+                    <select class="form-control" id="field_theme" name="theme" formControlName="themeId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="themeOption.id" *ngFor="let themeOption of themes; trackBy: trackById">{{ themeOption.id }}</option>
+                    </select>
                 </div>
             </div>
 

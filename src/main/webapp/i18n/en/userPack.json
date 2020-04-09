@@ -1,0 +1,28 @@
+{
+  "sortyquizzApp": {
+    "userPack": {
+      "home": {
+        "title": "User Packs",
+        "createLabel": "Create a new User Pack",
+        "createOrEditLabel": "Create or edit a User Pack",
+        "notFound": "No User Packs found"
+      },
+      "created": "A new User Pack is created with identifier {{ param }}",
+      "updated": "A User Pack is updated with identifier {{ param }}",
+      "deleted": "A User Pack is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete User Pack {{ id }}?"
+      },
+      "detail": {
+        "title": "User Pack"
+      },
+      "state": "State",
+      "lifeLeft": "Life Left",
+      "nbQuestionsToSucceed": "Nb Questions To Succeed",
+      "timeAtQuizzStep": "Time At Quizz Step",
+      "timeAtSortingStep": "Time At Sorting Step",
+      "profile": "Profile",
+      "pack": "Pack"
+    }
+  }
+}

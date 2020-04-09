@@ -12,6 +12,11 @@
         "pack": "Pack",
         "question": "Question",
         "answer": "Answer",
+        "referenceXp": "Reference XP",
+        "themeScore": "Theme Score",
+        "theme": "Theme",
+        "userPack": "User Pack",
+        "rule": "Rule",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
