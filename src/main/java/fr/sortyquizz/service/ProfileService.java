@@ -89,7 +89,7 @@ public class ProfileService {
      */
     public void deleteByUserId(Long userId) {
         log.debug("Request to delete Profile for user : {}", userId);
-//        profileRepository.deleteByUserId(userId);
+        profileRepository.deleteByUserId(userId);
     }
 
     /**
