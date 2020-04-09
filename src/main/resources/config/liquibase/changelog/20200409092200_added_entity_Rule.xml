@@ -54,6 +54,7 @@
             <column name="time_per_question" type="numeric"/>
             <column name="time_for_sorting" type="numeric"/>
             <column name="nb_min_card_to_win" type="numeric"/>
+            <column name="rule_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->
         </loadData>
     </changeSet>
