@@ -1,0 +1,6 @@
+id;question;type;pack_id
+1;Quelle heure est il ?;SIMPLE;1
+2;Quelle est la capitale de la France?;SIMPLE;1
+3;Quelle est la couleur du cheval blanc d'Henry IV ?;SIMPLE;2
+4;Quel célèbre dictateur dirigea l’URSS du milieu des années 1920 à 1953 ?;SIMPLE;2
+5;Dans quel pays peut-on trouver la Catalogne, l’Andalousie et la Castille ?;SIMPLE;2

@@ -26,7 +26,7 @@
                     <th scope="col"  jhiSortBy="xp"><span jhiTranslate="sortyquizzApp.themeScore.xp">Xp</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="level"><span jhiTranslate="sortyquizzApp.themeScore.level">Level</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="profileId"><span jhiTranslate="sortyquizzApp.themeScore.profile">Profile</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="themeId"><span jhiTranslate="sortyquizzApp.themeScore.theme">Theme</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="themeName"><span jhiTranslate="sortyquizzApp.themeScore.theme">Theme</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -42,7 +42,7 @@
                     </td>
                     <td>
                         <div *ngIf="themeScore.themeId">
-                            <a [routerLink]="['/theme', themeScore.themeId , 'view']" >{{ themeScore.themeId }}</a>
+                            <a [routerLink]="['/theme', themeScore.themeId , 'view']" >{{ themeScore.themeName }}</a>
                         </div>
                     </td>
                     <td class="text-right">

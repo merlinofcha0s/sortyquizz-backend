@@ -14,6 +14,7 @@ public interface ThemeScoreMapper extends EntityMapper<ThemeScoreDTO, ThemeScore
 
     @Mapping(source = "profile.id", target = "profileId")
     @Mapping(source = "theme.id", target = "themeId")
+    @Mapping(source = "theme.name", target = "themeName")
     ThemeScoreDTO toDto(ThemeScore themeScore);
 
     @Mapping(source = "profileId", target = "profile")

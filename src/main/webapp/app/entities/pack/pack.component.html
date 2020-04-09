@@ -28,7 +28,7 @@
                     <th scope="col"  jhiSortBy="type"><span jhiTranslate="sortyquizzApp.pack.type">Type</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="life"><span jhiTranslate="sortyquizzApp.pack.life">Life</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="ruleId"><span jhiTranslate="sortyquizzApp.pack.rule">Rule</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="themeId"><span jhiTranslate="sortyquizzApp.pack.theme">Theme</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="themeName"><span jhiTranslate="sortyquizzApp.pack.theme">Theme</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -46,7 +46,7 @@
                     </td>
                     <td>
                         <div *ngIf="pack.themeId">
-                            <a [routerLink]="['/theme', pack.themeId , 'view']" >{{ pack.themeId }}</a>
+                            <a [routerLink]="['/theme', pack.themeId , 'view']" >{{ pack.themeName }}</a>
                         </div>
                     </td>
                     <td class="text-right">

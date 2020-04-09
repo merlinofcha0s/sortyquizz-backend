@@ -9,7 +9,7 @@ import fr.sortyquizz.domain.enumeration.PackType;
  * A DTO for the {@link fr.sortyquizz.domain.Pack} entity.
  */
 public class PackDTO implements Serializable {
-    
+
     private Long id;
 
     @NotNull
@@ -24,11 +24,20 @@ public class PackDTO implements Serializable {
     @NotNull
     private Integer life;
 
-
     private Long ruleId;
 
     private Long themeId;
-    
+
+    private String themeName;
+
+    public String getThemeName() {
+        return themeName;
+    }
+
+    public void setThemeName(String themeName) {
+        this.themeName = themeName;
+    }
+
     public Long getId() {
         return id;
     }

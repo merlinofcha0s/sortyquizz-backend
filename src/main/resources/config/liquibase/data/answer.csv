@@ -1,0 +1,23 @@
+id;answer;jhi_order;is_the_right_answer;question_id
+1;12h25;null;true;1
+2;14h49;null;false;1
+3;16h42;null;false;1
+4;16h41;null;false;1
+5;Question de merde;null;false;1
+6;Congo;null;true;1
+7;Tokyo;null;false;2
+87;Paris;null;true;2
+9;New York;null;false;2
+10;Los Angeles;null;false;2
+11;Bleu;null;false;3
+12;Vert;null;false;3
+13;Blanc;null;true;3
+14;Jaune;null;false;3
+15;Staline;null;true;4
+16;Molotov;null;false;4
+17;Trotski;null;false;4
+18;Lénine;null;false;4
+19;Italie;null;true;5
+20;L'Espagne;null;false;5
+21;Le portugal;null;false;5
+22;La France;null;false;5

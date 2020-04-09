@@ -14,6 +14,7 @@ public interface PackMapper extends EntityMapper<PackDTO, Pack> {
 
     @Mapping(source = "rule.id", target = "ruleId")
     @Mapping(source = "theme.id", target = "themeId")
+    @Mapping(source = "theme.name", target = "themeName")
     PackDTO toDto(Pack pack);
 
     @Mapping(source = "ruleId", target = "rule")

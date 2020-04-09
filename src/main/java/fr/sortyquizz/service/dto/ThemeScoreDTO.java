@@ -8,7 +8,7 @@ import java.util.Objects;
  * A DTO for the {@link fr.sortyquizz.domain.ThemeScore} entity.
  */
 public class ThemeScoreDTO implements Serializable {
-    
+
     private Long id;
 
     @NotNull
@@ -21,7 +21,17 @@ public class ThemeScoreDTO implements Serializable {
     private Long profileId;
 
     private Long themeId;
-    
+
+    private String themeName;
+
+    public String getThemeName() {
+        return themeName;
+    }
+
+    public void setThemeName(String themeName) {
+        this.themeName = themeName;
+    }
+
     public Long getId() {
         return id;
     }

@@ -14,6 +14,7 @@ export interface IPack {
   cards?: ICard[];
   userPacks?: IUserPack[];
   themeId?: number;
+  themeName?: string;
 }
 
 export class Pack implements IPack {
@@ -27,6 +28,7 @@ export class Pack implements IPack {
     public questions?: IQuestion[],
     public cards?: ICard[],
     public userPacks?: IUserPack[],
-    public themeId?: number
+    public themeId?: number,
+    public themeName?: string
   ) {}
 }
