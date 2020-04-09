@@ -18,7 +18,8 @@
       },
       "level": "Level",
       "userPack": "User Pack",
-      "themeScore": "Theme Score"
+      "themeScore": "Theme Score",
+      "user": "User"
     }
   }
 }

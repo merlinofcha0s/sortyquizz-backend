@@ -21,6 +21,18 @@
             "otherEntityName": "themeScore",
             "otherEntityRelationshipName": "profile",
             "relationshipName": "themeScore"
+        },
+        {
+            "relationshipName": "user",
+            "otherEntityName": "user",
+            "relationshipType": "one-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "login",
+            "ownerSide": true,
+            "useJPADerivedIdentifier": false,
+            "otherEntityRelationshipName": "profile"
         }
     ],
     "changelogDate": "20200327153900",

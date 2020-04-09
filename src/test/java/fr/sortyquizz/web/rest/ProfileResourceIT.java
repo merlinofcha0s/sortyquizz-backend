@@ -2,6 +2,7 @@ package fr.sortyquizz.web.rest;
 
 import fr.sortyquizz.SortyquizzApp;
 import fr.sortyquizz.domain.Profile;
+import fr.sortyquizz.domain.User;
 import fr.sortyquizz.repository.ProfileRepository;
 import fr.sortyquizz.service.ProfileService;
 import fr.sortyquizz.service.dto.ProfileDTO;
@@ -62,6 +63,11 @@ public class ProfileResourceIT {
     public static Profile createEntity(EntityManager em) {
         Profile profile = new Profile()
             .level(DEFAULT_LEVEL);
+        // Add required entity
+        User user = UserResourceIT.createEntity(em);
+        em.persist(user);
+        em.flush();
+        profile.setUser(user);
         return profile;
     }
     /**
@@ -73,6 +79,11 @@ public class ProfileResourceIT {
     public static Profile createUpdatedEntity(EntityManager em) {
         Profile profile = new Profile()
             .level(UPDATED_LEVEL);
+        // Add required entity
+        User user = UserResourceIT.createEntity(em);
+        em.persist(user);
+        em.flush();
+        profile.setUser(user);
         return profile;
     }
 

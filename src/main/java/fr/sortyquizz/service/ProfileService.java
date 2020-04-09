@@ -102,7 +102,7 @@ public class ProfileService {
         log.debug("Request to create new profile for : {}", user);
         Profile profile = new Profile();
         profile.setLevel(1);
-//        profile.setUser(user);
+        profile.setUser(user);
         ProfileDTO newProfileCreated = profileMapper.toDto(profile);
         return save(newProfileCreated);
     }
