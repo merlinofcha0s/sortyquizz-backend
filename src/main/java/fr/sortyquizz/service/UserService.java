@@ -126,6 +126,7 @@ public class UserService {
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
         this.clearUserCaches(newUser);
+        profileService.createForUser(newUser);
         log.debug("Created Information for User: {}", newUser);
         return newUser;
     }

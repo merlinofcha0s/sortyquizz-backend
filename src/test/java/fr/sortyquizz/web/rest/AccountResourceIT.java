@@ -6,6 +6,7 @@ import fr.sortyquizz.domain.Authority;
 import fr.sortyquizz.domain.Profile;
 import fr.sortyquizz.domain.User;
 import fr.sortyquizz.repository.AuthorityRepository;
+import fr.sortyquizz.repository.ProfileRepository;
 import fr.sortyquizz.repository.UserRepository;
 import fr.sortyquizz.security.AuthoritiesConstants;
 import fr.sortyquizz.service.ProfileService;
@@ -57,6 +58,9 @@ public class AccountResourceIT {
 
     @Autowired
     private ProfileService profileService;
+
+    @Autowired
+    private ProfileRepository profileRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -145,7 +149,10 @@ public class AccountResourceIT {
                 .content(TestUtil.convertObjectToJsonBytes(validUser)))
             .andExpect(status().isCreated());
 
-        assertThat(userRepository.findOneByLogin("test-register-valid").isPresent()).isTrue();
+        Optional<User> createdUser = userRepository.findOneByLogin("test-register-valid");
+        assertThat(createdUser).isPresent();
+        Optional<Profile> profileCreated = profileRepository.findByUserId(createdUser.get().getId());
+        assertThat(profileCreated).isPresent();
     }
 
     @Test
