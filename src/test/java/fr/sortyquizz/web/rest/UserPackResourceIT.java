@@ -1,5 +1,6 @@
 package fr.sortyquizz.web.rest;
 
+import fr.sortyquizz.DBClearer;
 import fr.sortyquizz.SortyquizzApp;
 import fr.sortyquizz.domain.*;
 import fr.sortyquizz.domain.enumeration.PackState;
@@ -28,7 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Integration tests for the {@link UserPackResource} REST controller.
  */
 @SpringBootTest(classes = SortyquizzApp.class)
-
 @AutoConfigureMockMvc
 @WithMockUser
 public class UserPackResourceIT {
@@ -65,6 +65,9 @@ public class UserPackResourceIT {
 
     private UserPack userPack;
 
+    @Autowired
+    private DBClearer dbClearer;
+
     /**
      * Create an entity for this test.
      *
@@ -99,6 +102,7 @@ public class UserPackResourceIT {
     @BeforeEach
     public void initTest() {
         userPack = createEntity(em);
+        dbClearer.clearAllTables();
     }
 
     @Test
@@ -397,5 +401,83 @@ public class UserPackResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("2"));
+    }
+
+
+    @Test
+    @Transactional
+    @WithMockUser(value = "counted-user", roles = "USER")
+    public void getUserPackByConnectedUserShouldReturnUserPack() throws Exception {
+        // Initialize the database
+        User newUser = UserResourceIT.createEntity(em);
+        newUser.setLogin("counted-user");
+        em.persist(newUser);
+
+        Theme newTheme = ThemeResourceIT.createEntity(em);
+        em.persist(newTheme);
+
+        Pack newPack = PackResourceIT.createEntity(em);
+        newPack.setTheme(newTheme);
+        em.persist(newPack);
+
+        userPack.setPack(newPack);
+
+        Profile newProfile = ProfileResourceIT.createEntity(em);
+        newProfile.setUser(newUser);
+
+        em.persist(newProfile);
+
+        newProfile.addUserPack(userPack);
+        userPack.setProfile(newProfile);
+
+        em.persist(newProfile);
+        em.persist(userPack);
+
+        UserPack secondUserPack = createEntity(em);
+        secondUserPack.setPack(newPack);
+        secondUserPack.setProfile(newProfile);
+
+        em.persist(secondUserPack);
+
+        // Get the userPack
+        restUserPackMockMvc.perform(get("/api/user-packs/get-by-user"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(userPack.getId().intValue())))
+            .andExpect(jsonPath("$.[*].state").value(hasItem(DEFAULT_STATE.toString())))
+            .andExpect(jsonPath("$.[*].lifeLeft").value(hasItem(DEFAULT_LIFE_LEFT)))
+            .andExpect(jsonPath("$.[*].nbQuestionsToSucceed").value(hasItem(DEFAULT_NB_QUESTIONS_TO_SUCCEED)))
+            .andExpect(jsonPath("$.[*].timeAtQuizzStep").value(hasItem(DEFAULT_TIME_AT_QUIZZ_STEP)))
+            .andExpect(jsonPath("$.[*].timeAtSortingStep").value(hasItem(DEFAULT_TIME_AT_SORTING_STEP)));
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(value = "counted-user", roles = "USER")
+    public void getUserPackByConnectedUserShouldReturnZeroUserPack() throws Exception {
+        // Initialize the database
+        User newUser = UserResourceIT.createEntity(em);
+        newUser.setLogin("counted-user");
+        em.persist(newUser);
+
+        Theme newTheme = ThemeResourceIT.createEntity(em);
+        em.persist(newTheme);
+
+        Pack newPack = PackResourceIT.createEntity(em);
+        newPack.setTheme(newTheme);
+        em.persist(newPack);
+
+        Profile newProfile = ProfileResourceIT.createEntity(em);
+        newProfile.setUser(newUser);
+        em.persist(newProfile);
+
+        userPack.setProfile(newProfile);
+        em.persist(newProfile);
+
+        // Get the userPack
+        restUserPackMockMvc.perform(get("/api/user-packs/get-by-user"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("[]"));
     }
 }

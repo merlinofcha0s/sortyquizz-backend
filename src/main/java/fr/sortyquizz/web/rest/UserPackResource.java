@@ -124,10 +124,9 @@ public class UserPackResource {
     }
 
     /**
-     * {@code GET  /user-packs/:id} : get the "id" userPack.
+     * {@code GET  /user-packs/get-count-number-by-user} : get all the user pack for the connected user.
      *
-     * @param id the id of the userPackDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the userPackDTO, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the number of the user pack.
      */
     @GetMapping("/user-packs/get-count-number-by-user")
     public ResponseEntity<Integer> getCountUserPackByConnectedUser() {
@@ -135,5 +134,18 @@ public class UserPackResource {
         String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new AccountResource.AccountResourceException("Current user login not found"));
         int countUserPack = userPackService.countByUserLogin(userLogin);
         return ResponseEntity.ok().body(countUserPack);
+    }
+
+    /**
+     * {@code GET  /user-packs/get-count-number-by-user} : get all the user pack for the connected user.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the number of the user pack.
+     */
+    @GetMapping("/user-packs/get-by-user")
+    public ResponseEntity<List<UserPackDTO>> getUserPackByConnectedUser() {
+        log.debug("REST request to UserPack for the connected user");
+        String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new AccountResource.AccountResourceException("Current user login not found"));
+        List<UserPackDTO> allUserPackForConnectedUser = userPackService.getByUserLogin(userLogin);
+        return ResponseEntity.ok().body(allUserPackForConnectedUser);
     }
 }

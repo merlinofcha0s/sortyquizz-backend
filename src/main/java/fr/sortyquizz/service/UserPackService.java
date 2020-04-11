@@ -11,7 +11,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link UserPack}.
@@ -81,13 +83,27 @@ public class UserPackService {
     }
 
     /**
-     * Get all the userpack for the connected user.
+     * Count all the userpack for the connected user.
      *
-     * @return the entity.
+     * @return the number.
      */
     @Transactional(readOnly = true)
     public int countByUserLogin(String userLogin) {
-        log.debug("Request to get UserPack for the connected user : {}", userLogin);
+        log.debug("Request to count UserPack for the connected user : {}", userLogin);
         return userPackRepository.countAllByProfileUserLogin(userLogin);
+    }
+
+    /**
+     * Get all the userpack for the connected user.
+     *
+     * @return the number.
+     */
+    @Transactional(readOnly = true)
+    public List<UserPackDTO> getByUserLogin(String userLogin) {
+        log.debug("Request to get UserPack for the connected user : {}", userLogin);
+        return userPackRepository.findAllByProfileUserLogin(userLogin)
+            .stream()
+            .map(userPackMapper::toDto)
+            .collect(Collectors.toList());
     }
 }
