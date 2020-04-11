@@ -1,15 +1,16 @@
 package fr.sortyquizz.service.dto;
 
-import javax.validation.constraints.*;
+import fr.sortyquizz.domain.enumeration.PackState;
+
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
-import fr.sortyquizz.domain.enumeration.PackState;
 
 /**
  * A DTO for the {@link fr.sortyquizz.domain.UserPack} entity.
  */
 public class UserPackDTO implements Serializable {
-    
+
     private Long id;
 
     @NotNull
@@ -31,7 +32,37 @@ public class UserPackDTO implements Serializable {
     private Long profileId;
 
     private Long packId;
-    
+
+    public String themeName;
+
+    private String packName;
+
+    private String packLevel;
+
+    public String getThemeName() {
+        return themeName;
+    }
+
+    public void setThemeName(String themeName) {
+        this.themeName = themeName;
+    }
+
+    public String getPackName() {
+        return packName;
+    }
+
+    public void setPackName(String packName) {
+        this.packName = packName;
+    }
+
+    public String getPackLevel() {
+        return packLevel;
+    }
+
+    public void setPackLevel(String packLevel) {
+        this.packLevel = packLevel;
+    }
+
     public Long getId() {
         return id;
     }
@@ -120,14 +151,17 @@ public class UserPackDTO implements Serializable {
     @Override
     public String toString() {
         return "UserPackDTO{" +
-            "id=" + getId() +
-            ", state='" + getState() + "'" +
-            ", lifeLeft=" + getLifeLeft() +
-            ", nbQuestionsToSucceed=" + getNbQuestionsToSucceed() +
-            ", timeAtQuizzStep=" + getTimeAtQuizzStep() +
-            ", timeAtSortingStep=" + getTimeAtSortingStep() +
-            ", profileId=" + getProfileId() +
-            ", packId=" + getPackId() +
-            "}";
+            "id=" + id +
+            ", state=" + state +
+            ", lifeLeft=" + lifeLeft +
+            ", nbQuestionsToSucceed=" + nbQuestionsToSucceed +
+            ", timeAtQuizzStep=" + timeAtQuizzStep +
+            ", timeAtSortingStep=" + timeAtSortingStep +
+            ", profileId=" + profileId +
+            ", packId=" + packId +
+            ", themeName='" + themeName + '\'' +
+            ", packName='" + packName + '\'' +
+            ", packLevel='" + packLevel + '\'' +
+            '}';
     }
 }
