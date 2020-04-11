@@ -2,21 +2,16 @@ package fr.sortyquizz.service;
 
 import fr.sortyquizz.domain.UserPack;
 import fr.sortyquizz.repository.UserPackRepository;
-import fr.sortyquizz.security.SecurityUtils;
 import fr.sortyquizz.service.dto.UserPackDTO;
 import fr.sortyquizz.service.mapper.UserPackMapper;
-import fr.sortyquizz.web.rest.AccountResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link UserPack}.
@@ -91,8 +86,7 @@ public class UserPackService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public int countByConnectedUser() {
-        String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new AccountResource.AccountResourceException("Current user login not found"));
+    public int countByUserLogin(String userLogin) {
         log.debug("Request to get UserPack for the connected user : {}", userLogin);
         return userPackRepository.countAllByProfileUserLogin(userLogin);
     }

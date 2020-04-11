@@ -1,9 +1,9 @@
 package fr.sortyquizz.web.rest;
 
+import fr.sortyquizz.security.SecurityUtils;
 import fr.sortyquizz.service.UserPackService;
-import fr.sortyquizz.web.rest.errors.BadRequestAlertException;
 import fr.sortyquizz.service.dto.UserPackDTO;
-
+import fr.sortyquizz.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -13,9 +13,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -132,7 +132,8 @@ public class UserPackResource {
     @GetMapping("/user-packs/get-count-number-by-user")
     public ResponseEntity<Integer> getCountUserPackByConnectedUser() {
         log.debug("REST request to UserPack for the connected user");
-        int countUserPack = userPackService.countByConnectedUser();
+        String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new AccountResource.AccountResourceException("Current user login not found"));
+        int countUserPack = userPackService.countByUserLogin(userLogin);
         return ResponseEntity.ok().body(countUserPack);
     }
 }
