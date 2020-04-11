@@ -1,12 +1,12 @@
 package fr.sortyquizz.web.rest;
 
 import fr.sortyquizz.SortyquizzApp;
-import fr.sortyquizz.domain.UserPack;
+import fr.sortyquizz.domain.*;
+import fr.sortyquizz.domain.enumeration.PackState;
 import fr.sortyquizz.repository.UserPackRepository;
 import fr.sortyquizz.service.UserPackService;
 import fr.sortyquizz.service.dto.UserPackDTO;
 import fr.sortyquizz.service.mapper.UserPackMapper;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import java.util.List;
 
@@ -23,8 +24,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import fr.sortyquizz.domain.enumeration.PackState;
 /**
  * Integration tests for the {@link UserPackResource} REST controller.
  */
@@ -258,7 +257,7 @@ public class UserPackResourceIT {
             .andExpect(jsonPath("$.[*].timeAtQuizzStep").value(hasItem(DEFAULT_TIME_AT_QUIZZ_STEP)))
             .andExpect(jsonPath("$.[*].timeAtSortingStep").value(hasItem(DEFAULT_TIME_AT_SORTING_STEP)));
     }
-    
+
     @Test
     @Transactional
     public void getUserPack() throws Exception {
@@ -356,5 +355,47 @@ public class UserPackResourceIT {
         // Validate the database contains one less item
         List<UserPack> userPackList = userPackRepository.findAll();
         assertThat(userPackList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(value = "counted-user", roles = "USER")
+    public void getCountUserPackByConnectedUser() throws Exception {
+        // Initialize the database
+        User newUser = UserResourceIT.createEntity(em);
+        newUser.setLogin("counted-user");
+        em.persist(newUser);
+
+        Theme newTheme = ThemeResourceIT.createEntity(em);
+        em.persist(newTheme);
+
+        Pack newPack = PackResourceIT.createEntity(em);
+        newPack.setTheme(newTheme);
+        em.persist(newPack);
+
+        userPack.setPack(newPack);
+
+        Profile newProfile = ProfileResourceIT.createEntity(em);
+        newProfile.setUser(newUser);
+
+        em.persist(newProfile);
+
+        newProfile.addUserPack(userPack);
+        userPack.setProfile(newProfile);
+
+        em.persist(newProfile);
+        em.persist(userPack);
+
+        UserPack secondUserPack = createEntity(em);
+        secondUserPack.setPack(newPack);
+        secondUserPack.setProfile(newProfile);
+
+        em.persist(secondUserPack);
+
+        // Get the userPack
+        restUserPackMockMvc.perform(get("/api/user-packs/get-count-number-by-user"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("2"));
     }
 }
