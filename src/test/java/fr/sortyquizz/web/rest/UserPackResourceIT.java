@@ -25,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 /**
  * Integration tests for the {@link UserPackResource} REST controller.
  */
@@ -70,7 +71,7 @@ public class UserPackResourceIT {
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -83,9 +84,10 @@ public class UserPackResourceIT {
             .timeAtSortingStep(DEFAULT_TIME_AT_SORTING_STEP);
         return userPack;
     }
+
     /**
      * Create an updated entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -366,35 +368,7 @@ public class UserPackResourceIT {
     @WithMockUser(value = "counted-user", roles = "USER")
     public void getCountUserPackByConnectedUser() throws Exception {
         // Initialize the database
-        User newUser = UserResourceIT.createEntity(em);
-        newUser.setLogin("counted-user");
-        em.persist(newUser);
-
-        Theme newTheme = ThemeResourceIT.createEntity(em);
-        em.persist(newTheme);
-
-        Pack newPack = PackResourceIT.createEntity(em);
-        newPack.setTheme(newTheme);
-        em.persist(newPack);
-
-        userPack.setPack(newPack);
-
-        Profile newProfile = ProfileResourceIT.createEntity(em);
-        newProfile.setUser(newUser);
-
-        em.persist(newProfile);
-
-        newProfile.addUserPack(userPack);
-        userPack.setProfile(newProfile);
-
-        em.persist(newProfile);
-        em.persist(userPack);
-
-        UserPack secondUserPack = createEntity(em);
-        secondUserPack.setPack(newPack);
-        secondUserPack.setProfile(newProfile);
-
-        em.persist(secondUserPack);
+        initBasicData(true);
 
         // Get the userPack
         restUserPackMockMvc.perform(get("/api/user-packs/get-count-number-by-user"))
@@ -409,35 +383,7 @@ public class UserPackResourceIT {
     @WithMockUser(value = "counted-user", roles = "USER")
     public void getUserPackByConnectedUserShouldReturnUserPack() throws Exception {
         // Initialize the database
-        User newUser = UserResourceIT.createEntity(em);
-        newUser.setLogin("counted-user");
-        em.persist(newUser);
-
-        Theme newTheme = ThemeResourceIT.createEntity(em);
-        em.persist(newTheme);
-
-        Pack newPack = PackResourceIT.createEntity(em);
-        newPack.setTheme(newTheme);
-        em.persist(newPack);
-
-        userPack.setPack(newPack);
-
-        Profile newProfile = ProfileResourceIT.createEntity(em);
-        newProfile.setUser(newUser);
-
-        em.persist(newProfile);
-
-        newProfile.addUserPack(userPack);
-        userPack.setProfile(newProfile);
-
-        em.persist(newProfile);
-        em.persist(userPack);
-
-        UserPack secondUserPack = createEntity(em);
-        secondUserPack.setPack(newPack);
-        secondUserPack.setProfile(newProfile);
-
-        em.persist(secondUserPack);
+        initBasicData(true);
 
         // Get the userPack
         restUserPackMockMvc.perform(get("/api/user-packs/get-by-user"))
@@ -456,6 +402,16 @@ public class UserPackResourceIT {
     @WithMockUser(value = "counted-user", roles = "USER")
     public void getUserPackByConnectedUserShouldReturnZeroUserPack() throws Exception {
         // Initialize the database
+        initBasicData(false);
+
+        // Get the userPack
+        restUserPackMockMvc.perform(get("/api/user-packs/get-by-user"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("[]"));
+    }
+
+    public void initBasicData(boolean withUserPack) {
         User newUser = UserResourceIT.createEntity(em);
         newUser.setLogin("counted-user");
         em.persist(newUser);
@@ -467,17 +423,26 @@ public class UserPackResourceIT {
         newPack.setTheme(newTheme);
         em.persist(newPack);
 
+
         Profile newProfile = ProfileResourceIT.createEntity(em);
         newProfile.setUser(newUser);
+
         em.persist(newProfile);
 
-        userPack.setProfile(newProfile);
+        if (withUserPack) {
+            userPack.setPack(newPack);
+            newProfile.addUserPack(userPack);
+            userPack.setProfile(newProfile);
+        }
         em.persist(newProfile);
 
-        // Get the userPack
-        restUserPackMockMvc.perform(get("/api/user-packs/get-by-user"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(content().string("[]"));
+        if (withUserPack) {
+            em.persist(userPack);
+            UserPack secondUserPack = UserPackResourceIT.createEntity(em);
+            secondUserPack.setPack(newPack);
+            secondUserPack.setProfile(newProfile);
+
+            em.persist(secondUserPack);
+        }
     }
 }

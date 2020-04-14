@@ -106,4 +106,15 @@ public class UserPackService {
             .map(userPackMapper::toDto)
             .collect(Collectors.toList());
     }
+
+    /**
+     * Get all the userpack for the connected user.
+     *
+     * @return the number.
+     */
+    @Transactional(readOnly = true)
+    public Optional<UserPack> getByIdAndUserLogin(Long id, String userLogin) {
+        log.debug("Request to get UserPack for the connected user : {}", userLogin);
+        return userPackRepository.findByIdAndProfileUserLogin(id, userLogin);
+    }
 }

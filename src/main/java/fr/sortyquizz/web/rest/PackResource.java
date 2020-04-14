@@ -1,9 +1,9 @@
 package fr.sortyquizz.web.rest;
 
+import fr.sortyquizz.security.SecurityUtils;
 import fr.sortyquizz.service.PackService;
-import fr.sortyquizz.web.rest.errors.BadRequestAlertException;
 import fr.sortyquizz.service.dto.PackDTO;
-
+import fr.sortyquizz.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -13,10 +13,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -122,5 +121,19 @@ public class PackResource {
         log.debug("REST request to delete Pack : {}", id);
         packService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+    }
+
+    /**
+     * {@code GET  /packs/:id} : get the "id" pack.
+     *
+     * @param id the id of the packDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the packDTO, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/packs/get-by-userpackid-and-user/{userPackId}")
+    public ResponseEntity<PackDTO> getPackByIdAndConnectedUser(@PathVariable Long userPackId) {
+        log.debug("REST request to get Pack : {}", userPackId);
+        String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new AccountResource.AccountResourceException("Current user login not found"));
+        Optional<PackDTO> packDTO = packService.findByUserPackIdAndConnectedUser(userPackId, userLogin);
+        return ResponseUtil.wrapOrNotFound(packDTO);
     }
 }

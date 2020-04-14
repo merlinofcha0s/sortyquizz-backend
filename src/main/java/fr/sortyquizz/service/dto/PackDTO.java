@@ -1,9 +1,12 @@
 package fr.sortyquizz.service.dto;
 
-import javax.validation.constraints.*;
-import java.io.Serializable;
-import java.util.Objects;
 import fr.sortyquizz.domain.enumeration.PackType;
+
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * A DTO for the {@link fr.sortyquizz.domain.Pack} entity.
@@ -29,6 +32,36 @@ public class PackDTO implements Serializable {
     private Long themeId;
 
     private String themeName;
+
+    private RuleDTO rule;
+
+    private Set<QuestionDTO> questions = new HashSet<>();
+
+    private Set<CardDTO> cards = new HashSet<>();
+
+    public RuleDTO getRule() {
+        return rule;
+    }
+
+    public void setRule(RuleDTO rule) {
+        this.rule = rule;
+    }
+
+    public Set<QuestionDTO> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(Set<QuestionDTO> questions) {
+        this.questions = questions;
+    }
+
+    public Set<CardDTO> getCards() {
+        return cards;
+    }
+
+    public void setCards(Set<CardDTO> cards) {
+        this.cards = cards;
+    }
 
     public String getThemeName() {
         return themeName;

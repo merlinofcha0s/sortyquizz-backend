@@ -1,12 +1,14 @@
 package fr.sortyquizz.web.rest;
 
+import fr.sortyquizz.DBClearer;
 import fr.sortyquizz.SortyquizzApp;
-import fr.sortyquizz.domain.Pack;
+import fr.sortyquizz.domain.*;
+import fr.sortyquizz.domain.enumeration.PackType;
+import fr.sortyquizz.domain.enumeration.QuestionType;
 import fr.sortyquizz.repository.PackRepository;
 import fr.sortyquizz.service.PackService;
 import fr.sortyquizz.service.dto.PackDTO;
 import fr.sortyquizz.service.mapper.PackMapper;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import java.util.List;
 
@@ -24,7 +27,6 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import fr.sortyquizz.domain.enumeration.PackType;
 /**
  * Integration tests for the {@link PackResource} REST controller.
  */
@@ -63,9 +65,12 @@ public class PackResourceIT {
 
     private Pack pack;
 
+    @Autowired
+    private DBClearer dbClearer;
+
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -77,9 +82,10 @@ public class PackResourceIT {
             .life(DEFAULT_LIFE);
         return pack;
     }
+
     /**
      * Create an updated entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -95,6 +101,7 @@ public class PackResourceIT {
     @BeforeEach
     public void initTest() {
         pack = createEntity(em);
+        dbClearer.clearAllTables();
     }
 
     @Test
@@ -232,7 +239,7 @@ public class PackResourceIT {
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
             .andExpect(jsonPath("$.[*].life").value(hasItem(DEFAULT_LIFE)));
     }
-    
+
     @Test
     @Transactional
     public void getPack() throws Exception {
@@ -327,5 +334,131 @@ public class PackResourceIT {
         // Validate the database contains one less item
         List<Pack> packList = packRepository.findAll();
         assertThat(packList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(value = "counted-user", roles = "USER")
+    public void getPackByUserPackIdAndLoginShouldWork() throws Exception {
+        // Initialize the database
+        UserPack userPack = UserPackResourceIT.createEntity(em);
+        User newUser = UserResourceIT.createEntity(em);
+        newUser.setLogin("counted-user");
+        em.persist(newUser);
+
+        Theme newTheme = ThemeResourceIT.createEntity(em);
+        em.persist(newTheme);
+
+        pack.setTheme(newTheme);
+        em.persist(pack);
+
+        Rule rule = new Rule();
+        rule.setNbMaxQuestions(1);
+        rule.setNbMinCardToWin(1);
+        rule.setTimeForSorting(1);
+        rule.setTimePerQuestion(1);
+
+        em.persist(rule);
+
+        Question question = new Question();
+        question.setPack(pack);
+        question.setType(QuestionType.SIMPLE);
+        question.setQuestion("Looool lool ?");
+        em.persist(question);
+
+        Answer answer = new Answer();
+        answer.setQuestion(question);
+        answer.setIsTheRightAnswer(true);
+        answer.setAnswer("looooooooooooooooooool");
+        em.persist(answer);
+
+        question.addAnswer(answer);
+        em.persist(question);
+
+        Profile newProfile = ProfileResourceIT.createEntity(em);
+        newProfile.setUser(newUser);
+
+        em.persist(newProfile);
+        userPack.setPack(pack);
+        newProfile.addUserPack(userPack);
+        userPack.setProfile(newProfile);
+
+        em.persist(userPack);
+
+        pack.addQuestion(question);
+        pack.setRule(rule);
+
+        em.persist(pack);
+
+        // Get all the packList
+        restPackMockMvc.perform(get("/api/packs/get-by-userpackid-and-user/{userPackId}", userPack.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.id").value(pack.getId().intValue()))
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.level").value(DEFAULT_LEVEL))
+            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
+            .andExpect(jsonPath("$.life").value(DEFAULT_LIFE))
+            .andExpect(jsonPath("$.rule.id").value(rule.getId()))
+            .andExpect(jsonPath("$.questions.[*].id").value(hasItem(question.getId().intValue())));
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(value = "counted-user-fail", roles = "USER")
+    public void getPackByUserPackIdAndLoginShouldFailNotTheRightUserConnected() throws Exception {
+        // Initialize the database
+        UserPack userPack = UserPackResourceIT.createEntity(em);
+        User newUser = UserResourceIT.createEntity(em);
+        newUser.setLogin("counted-user");
+        em.persist(newUser);
+
+        Theme newTheme = ThemeResourceIT.createEntity(em);
+        em.persist(newTheme);
+
+        pack.setTheme(newTheme);
+        em.persist(pack);
+
+        Rule rule = new Rule();
+        rule.setNbMaxQuestions(1);
+        rule.setNbMinCardToWin(1);
+        rule.setTimeForSorting(1);
+        rule.setTimePerQuestion(1);
+
+        em.persist(rule);
+
+        Question question = new Question();
+        question.setPack(pack);
+        question.setType(QuestionType.SIMPLE);
+        question.setQuestion("Looool lool ?");
+        em.persist(question);
+
+        Answer answer = new Answer();
+        answer.setQuestion(question);
+        answer.setIsTheRightAnswer(true);
+        answer.setAnswer("looooooooooooooooooool");
+        em.persist(answer);
+
+        question.addAnswer(answer);
+        em.persist(question);
+
+        Profile newProfile = ProfileResourceIT.createEntity(em);
+        newProfile.setUser(newUser);
+
+        em.persist(newProfile);
+        userPack.setPack(pack);
+        newProfile.addUserPack(userPack);
+        userPack.setProfile(newProfile);
+
+        em.persist(userPack);
+
+        pack.addQuestion(question);
+        pack.setRule(rule);
+
+        em.persist(pack);
+
+        // Get all the packList
+        restPackMockMvc.perform(get("/api/packs/get-by-userpackid-and-user/{userPackId}", userPack.getId()))
+            .andExpect(status().isNotFound());
     }
 }
