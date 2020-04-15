@@ -1,9 +1,12 @@
 package fr.sortyquizz.service;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import fr.sortyquizz.domain.Pack;
 import fr.sortyquizz.domain.UserPack;
 import fr.sortyquizz.repository.PackRepository;
 import fr.sortyquizz.service.dto.PackDTO;
+import fr.sortyquizz.service.dto.QuestionDTO;
 import fr.sortyquizz.service.mapper.PackMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Service Implementation for managing {@link Pack}.
@@ -95,8 +99,12 @@ public class PackService {
     public Optional<PackDTO> findByUserPackIdAndConnectedUser(Long userPackId, String login) {
         log.debug("Request to get Pack by userpack userPackId : {}", userPackId);
         Optional<UserPack> userPackByIdAndLogin = userPackService.getByIdAndUserLogin(userPackId, login);
+
         if (userPackByIdAndLogin.isPresent()) {
             PackDTO pack = packMapper.toDto(userPackByIdAndLogin.get().getPack());
+            // Limit the nb of returned question by to max number in the rule
+            Set<QuestionDTO> questions = ImmutableSet.copyOf(Iterables.limit(pack.getQuestions(), pack.getRule().getNbMaxQuestions()));
+            pack.setQuestions(questions);
             return Optional.of(pack);
         } else {
             return Optional.empty();
