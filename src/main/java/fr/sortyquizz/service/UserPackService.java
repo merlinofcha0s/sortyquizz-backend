@@ -117,4 +117,23 @@ public class UserPackService {
         log.debug("Request to get UserPack for the connected user : {}", userLogin);
         return userPackRepository.findByIdAndProfileUserLogin(id, userLogin);
     }
+
+    /**
+     * Get all the userpack for the connected user.
+     *
+     * @return the number.
+     */
+    @Transactional
+    public boolean completePackForStep1(UserPackDTO userPackDTO, String userLogin) {
+        log.debug("Request to get UserPack for the connected user : {}", userLogin);
+        Optional<UserPack> packToComplete = userPackRepository.findByIdAndProfileUserLogin(userPackDTO.getPackId(), userLogin);
+        if (packToComplete.isPresent()) {
+            packToComplete.get().setNbQuestionsToSucceed(userPackDTO.getNbQuestionsToSucceed());
+            packToComplete.get().setTimeAtQuizzStep(userPackDTO.getTimeAtQuizzStep());
+            userPackRepository.save(packToComplete.get());
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

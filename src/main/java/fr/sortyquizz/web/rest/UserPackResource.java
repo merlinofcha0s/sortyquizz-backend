@@ -148,4 +148,19 @@ public class UserPackResource {
         List<UserPackDTO> allUserPackForConnectedUser = userPackService.getByUserLogin(userLogin);
         return ResponseEntity.ok().body(allUserPackForConnectedUser);
     }
+
+    /**
+     * {@code POST  /user-packs/complete} : Create a new userPack.
+     *
+     * @param userPackDTO the userPackDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new userPackDTO, or with status {@code 400 (Bad Request)} if the userPack has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("/user-packs/complete-step-1")
+    public ResponseEntity<Boolean> completeUserPackForStep1(@RequestBody UserPackDTO userPackDTO) {
+        log.debug("REST request to save UserPack : {}", userPackDTO);
+        String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new AccountResource.AccountResourceException("Current user login not found"));
+        boolean result = userPackService.completePackForStep1(userPackDTO, userLogin);
+        return ResponseEntity.ok().body(result);
+    }
 }

@@ -20,4 +20,6 @@ public interface UserPackRepository extends JpaRepository<UserPack, Long> {
 
     Optional<UserPack> findByIdAndProfileUserLogin(Long id, String login);
 
+    Optional<UserPack> findByPackIdAndProfileUserLogin(Long packId, String login);
+
 }
