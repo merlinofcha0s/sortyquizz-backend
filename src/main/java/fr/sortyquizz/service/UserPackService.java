@@ -126,7 +126,7 @@ public class UserPackService {
     @Transactional
     public boolean completePackForStep1(UserPackDTO userPackDTO, String userLogin) {
         log.debug("Request to get UserPack for the connected user : {}", userLogin);
-        Optional<UserPack> packToComplete = userPackRepository.findByIdAndProfileUserLogin(userPackDTO.getPackId(), userLogin);
+        Optional<UserPack> packToComplete = userPackRepository.findByPackIdAndProfileUserLogin(userPackDTO.getPackId(), userLogin);
         if (packToComplete.isPresent()) {
             packToComplete.get().setNbQuestionsToSucceed(userPackDTO.getNbQuestionsToSucceed());
             packToComplete.get().setTimeAtQuizzStep(userPackDTO.getTimeAtQuizzStep());
