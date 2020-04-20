@@ -1,6 +1,7 @@
 package fr.sortyquizz.repository;
 
 import fr.sortyquizz.domain.UserPack;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,8 +19,8 @@ public interface UserPackRepository extends JpaRepository<UserPack, Long> {
 
     List<UserPack> findAllByProfileUserLogin(String login);
 
+    @EntityGraph("userpack-with-rule-pack-questions-answers-cards")
     Optional<UserPack> findByIdAndProfileUserLogin(Long id, String login);
 
     Optional<UserPack> findByPackIdAndProfileUserLogin(Long packId, String login);
-
 }

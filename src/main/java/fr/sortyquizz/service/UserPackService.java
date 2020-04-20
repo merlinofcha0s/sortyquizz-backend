@@ -108,14 +108,31 @@ public class UserPackService {
     }
 
     /**
-     * Get all the userpack for the connected user.
+     * Get userpack by id and for the connected user.
      *
-     * @return the number.
+     * @param id the id of the entity.
+     * @param userLogin the login of the connected user.
+     *
+     * @return the userpack if one.
      */
     @Transactional(readOnly = true)
     public Optional<UserPack> getByIdAndUserLogin(Long id, String userLogin) {
         log.debug("Request to get UserPack for the connected user : {}", userLogin);
         return userPackRepository.findByIdAndProfileUserLogin(id, userLogin);
+    }
+
+    /**
+     * Get userpack by id and for the connected user.
+     *
+     * @param id the id of the entity.
+     * @param userLogin the login of the connected user.
+     *
+     * @return the userpack if one.
+     */
+    @Transactional(readOnly = true)
+    public Optional<UserPackDTO> getByIdAndUserLoginDTO(Long id, String userLogin) {
+        log.debug("Request to get UserPack for the connected user : {}", userLogin);
+        return userPackRepository.findByIdAndProfileUserLogin(id, userLogin).map(userPackMapper::toDto);
     }
 
     /**
@@ -134,6 +151,40 @@ public class UserPackService {
             return true;
         } else {
             return false;
+        }
+    }
+
+    /**
+     * Service when user loose step 1.
+     *
+     * @param userPackId id of the user pack
+     * @param userLogin  login of the connected user
+     * @return the number.
+     */
+    @Transactional
+    public void looseStep1(Integer userPackId, String userLogin) {
+        log.debug("Request to loose userpack by userpack id and userlogin : {}", userLogin);
+        Optional<UserPack> userPackByIdAndLogin = userPackRepository.findByIdAndProfileUserLogin(userPackId.longValue(), userLogin);
+        if (userPackByIdAndLogin.isPresent()) {
+            userPackByIdAndLogin.get().setLifeLeft(userPackByIdAndLogin.get().getLifeLeft() - 1);
+            userPackRepository.save(userPackByIdAndLogin.get());
+        }
+    }
+
+    /**
+     * Service when user loose step 1.
+     *
+     * @param userPackId id of the user pack
+     * @param userLogin  login of the connected user
+     * @return the number.
+     */
+    @Transactional
+    public void abortStep1(Integer userPackId, String userLogin) {
+        log.debug("Request to loose userpack by userpack id and userlogin : {}", userLogin);
+        Optional<UserPack> userPackByIdAndLogin = userPackRepository.findByIdAndProfileUserLogin(userPackId.longValue(), userLogin);
+        if (userPackByIdAndLogin.isPresent()) {
+            userPackByIdAndLogin.get().setLifeLeft(0);
+            userPackRepository.save(userPackByIdAndLogin.get());
         }
     }
 }

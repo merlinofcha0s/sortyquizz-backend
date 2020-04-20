@@ -39,6 +39,16 @@ public class UserPackDTO implements Serializable {
 
     private String packLevel;
 
+    private PackDTO pack;
+
+    public PackDTO getPack() {
+        return pack;
+    }
+
+    public void setPack(PackDTO pack) {
+        this.pack = pack;
+    }
+
     public String getThemeName() {
         return themeName;
     }

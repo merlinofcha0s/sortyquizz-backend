@@ -1,22 +1,26 @@
 package fr.sortyquizz.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import fr.sortyquizz.domain.enumeration.PackState;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Objects;
-
-import fr.sortyquizz.domain.enumeration.PackState;
 
 /**
  * A UserPack.
  */
 @Entity
 @Table(name = "user_pack")
+@NamedEntityGraph(name = "userpack-with-rule-pack-questions-answers-cards",
+    attributeNodes = @NamedAttributeNode(value = "pack", subgraph = "pack"),
+    subgraphs = {
+        @NamedSubgraph(name = "pack", attributeNodes = {@NamedAttributeNode(value = "questions", subgraph = "question_answer"),
+            @NamedAttributeNode("cards"), @NamedAttributeNode("rule")}),
+        @NamedSubgraph(name = "question_answer", attributeNodes = {@NamedAttributeNode(value = "answers")})
+    })
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class UserPack implements Serializable {
 

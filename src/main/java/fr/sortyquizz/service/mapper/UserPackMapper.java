@@ -17,6 +17,7 @@ public interface UserPackMapper extends EntityMapper<UserPackDTO, UserPack> {
     @Mapping(source = "pack.name", target = "packName")
     @Mapping(source = "pack.level", target = "packLevel")
     @Mapping(source = "pack.theme.name", target = "themeName")
+    @Mapping(source = "pack", target = "pack")
     UserPackDTO toDto(UserPack userPack);
 
     @Mapping(source = "profileId", target = "profile")

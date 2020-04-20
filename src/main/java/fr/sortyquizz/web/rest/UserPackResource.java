@@ -154,7 +154,6 @@ public class UserPackResource {
      *
      * @param userPackDTO the userPackDTO to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new userPackDTO, or with status {@code 400 (Bad Request)} if the userPack has already an ID.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/user-packs/complete-step-1")
     public ResponseEntity<Boolean> completeUserPackForStep1(@RequestBody UserPackDTO userPackDTO) {
@@ -162,5 +161,47 @@ public class UserPackResource {
         String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new AccountResource.AccountResourceException("Current user login not found"));
         boolean result = userPackService.completePackForStep1(userPackDTO, userLogin);
         return ResponseEntity.ok().body(result);
+    }
+
+    /**
+     * {@code GET  /user-packs/:id} : get the "id" userPack.
+     *
+     * @param id the id of the userPackDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the userPackDTO, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/user-packs/get-by-id-and-user/{id}")
+    public ResponseEntity<UserPackDTO> getByIdAndConnectedUser(@PathVariable Long id) {
+        log.debug("REST request to get UserPack for the connected user : {}", id);
+        String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new AccountResource.AccountResourceException("Current user login not found"));
+        Optional<UserPackDTO> userPackDTO = userPackService.getByIdAndUserLoginDTO(id, userLogin);
+        return ResponseUtil.wrapOrNotFound(userPackDTO);
+    }
+
+    /**
+     * {@code POST  /user-packs/complete} : Create a new userPack.
+     *
+     * @param userPackid the id of the pack
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new userPackDTO, or with status {@code 400 (Bad Request)} if the userPack has already an ID.
+     */
+    @PostMapping("/user-packs/loose-step-1-with-life")
+    public ResponseEntity<Void> looseStep1WithLife(@RequestBody Integer userPackid) {
+        log.debug("REST request to loose step 1 for UserPack : {}", userPackid);
+        String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new AccountResource.AccountResourceException("Current user login not found"));
+        userPackService.looseStep1(userPackid, userLogin);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * {@code POST  /user-packs/complete} : Create a new userPack.
+     *
+     * @param userPackId the id of the pack
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new userPackDTO, or with status {@code 400 (Bad Request)} if the userPack has already an ID.
+     */
+    @PostMapping("/user-packs/abort")
+    public ResponseEntity<Void> abortPack(@RequestBody Integer userPackId) {
+        log.debug("REST request to loose step 1 for UserPack : {}", userPackId);
+        String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new AccountResource.AccountResourceException("Current user login not found"));
+        userPackService.abortStep1(userPackId, userLogin);
+        return ResponseEntity.ok().build();
     }
 }
