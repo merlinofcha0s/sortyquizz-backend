@@ -105,7 +105,6 @@ public class PackService {
             // Limit the nb of returned question by to max number in the rule
             Set<QuestionDTO> questions = ImmutableSet.copyOf(Iterables.limit(pack.getQuestions(), pack.getRule().getNbMaxQuestions()));
             pack.setQuestions(questions);
-            pack.setLifeLeft(userPackByIdAndLogin.get().getLifeLeft());
             return Optional.of(pack);
         } else {
             return Optional.empty();
