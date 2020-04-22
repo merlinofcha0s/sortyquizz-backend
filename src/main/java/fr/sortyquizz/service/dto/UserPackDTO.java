@@ -1,6 +1,7 @@
 package fr.sortyquizz.service.dto;
 
 import fr.sortyquizz.domain.enumeration.PackState;
+import fr.sortyquizz.service.dto.enumeration.ResultStep1;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -40,6 +41,16 @@ public class UserPackDTO implements Serializable {
     private String packLevel;
 
     private PackDTO pack;
+
+    private ResultStep1 resultStep1;
+
+    public ResultStep1 getResultStep1() {
+        return resultStep1;
+    }
+
+    public void setResultStep1(ResultStep1 resultStep1) {
+        this.resultStep1 = resultStep1;
+    }
 
     public PackDTO getPack() {
         return pack;

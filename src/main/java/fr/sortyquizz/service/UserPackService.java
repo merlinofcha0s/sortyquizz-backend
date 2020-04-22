@@ -3,6 +3,7 @@ package fr.sortyquizz.service;
 import fr.sortyquizz.domain.UserPack;
 import fr.sortyquizz.repository.UserPackRepository;
 import fr.sortyquizz.service.dto.UserPackDTO;
+import fr.sortyquizz.service.dto.enumeration.ResultStep1;
 import fr.sortyquizz.service.mapper.UserPackMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,9 +111,8 @@ public class UserPackService {
     /**
      * Get userpack by id and for the connected user.
      *
-     * @param id the id of the entity.
+     * @param id        the id of the entity.
      * @param userLogin the login of the connected user.
-     *
      * @return the userpack if one.
      */
     @Transactional(readOnly = true)
@@ -124,9 +124,8 @@ public class UserPackService {
     /**
      * Get userpack by id and for the connected user.
      *
-     * @param id the id of the entity.
+     * @param id        the id of the entity.
      * @param userLogin the login of the connected user.
-     *
      * @return the userpack if one.
      */
     @Transactional(readOnly = true)
@@ -145,8 +144,15 @@ public class UserPackService {
         log.debug("Request to get UserPack for the connected user : {}", userLogin);
         Optional<UserPack> packToComplete = userPackRepository.findByPackIdAndProfileUserLogin(userPackDTO.getPackId(), userLogin);
         if (packToComplete.isPresent()) {
-            packToComplete.get().setNbQuestionsToSucceed(userPackDTO.getNbQuestionsToSucceed());
-            packToComplete.get().setTimeAtQuizzStep(userPackDTO.getTimeAtQuizzStep());
+            if (userPackDTO.getResultStep1() == ResultStep1.FAIL_WITH_LIFE) {
+                packToComplete.get().setLifeLeft(packToComplete.get().getLifeLeft() - 1);
+            } else if (userPackDTO.getResultStep1() == ResultStep1.SUCCEED) {
+                packToComplete.get().setNbQuestionsToSucceed(userPackDTO.getNbQuestionsToSucceed());
+                packToComplete.get().setTimeAtQuizzStep(userPackDTO.getTimeAtQuizzStep());
+            } else {
+                packToComplete.get().setLifeLeft(0);
+            }
+
             userPackRepository.save(packToComplete.get());
             return true;
         } else {
