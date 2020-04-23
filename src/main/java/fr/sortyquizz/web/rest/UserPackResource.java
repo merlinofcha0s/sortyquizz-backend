@@ -156,11 +156,11 @@ public class UserPackResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new userPackDTO, or with status {@code 400 (Bad Request)} if the userPack has already an ID.
      */
     @PostMapping("/user-packs/complete-step-1")
-    public ResponseEntity<Boolean> completeUserPackForStep1(@RequestBody UserPackDTO userPackDTO) {
+    public ResponseEntity<UserPackDTO> completeUserPackForStep1(@RequestBody UserPackDTO userPackDTO) {
         log.debug("REST request to save UserPack : {}", userPackDTO);
         String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new AccountResource.AccountResourceException("Current user login not found"));
-        boolean result = userPackService.completePackForStep1(userPackDTO, userLogin);
-        return ResponseEntity.ok().body(result);
+        Optional<UserPackDTO> updatedUserPack = userPackService.completePackForStep1(userPackDTO, userLogin);
+        return ResponseUtil.wrapOrNotFound(updatedUserPack);
     }
 
     /**

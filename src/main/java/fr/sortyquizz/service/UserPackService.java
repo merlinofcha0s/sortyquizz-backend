@@ -140,7 +140,7 @@ public class UserPackService {
      * @return the number.
      */
     @Transactional
-    public boolean completePackForStep1(UserPackDTO userPackDTO, String userLogin) {
+    public Optional<UserPackDTO> completePackForStep1(UserPackDTO userPackDTO, String userLogin) {
         log.debug("Request to get UserPack for the connected user : {}", userLogin);
         Optional<UserPack> packToComplete = userPackRepository.findByPackIdAndProfileUserLogin(userPackDTO.getPackId(), userLogin);
         if (packToComplete.isPresent()) {
@@ -153,10 +153,12 @@ public class UserPackService {
                 packToComplete.get().setLifeLeft(0);
             }
 
-            userPackRepository.save(packToComplete.get());
-            return true;
+            UserPack save = userPackRepository.save(packToComplete.get());
+            UserPackDTO userPackDTOUpdated = userPackMapper.toDto(save);
+            userPackDTOUpdated.setResultStep1(userPackDTO.getResultStep1());
+            return Optional.of(userPackDTOUpdated);
         } else {
-            return false;
+            return Optional.empty();
         }
     }
 
