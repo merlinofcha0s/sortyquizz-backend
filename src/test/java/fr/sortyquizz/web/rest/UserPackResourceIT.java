@@ -423,7 +423,6 @@ public class UserPackResourceIT {
         newPack.setTheme(newTheme);
         em.persist(newPack);
 
-
         Profile newProfile = ProfileResourceIT.createEntity(em);
         newProfile.setUser(newUser);
 

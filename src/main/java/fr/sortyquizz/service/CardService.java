@@ -1,18 +1,24 @@
 package fr.sortyquizz.service;
 
 import fr.sortyquizz.domain.Card;
+import fr.sortyquizz.domain.UserPack;
 import fr.sortyquizz.repository.CardRepository;
 import fr.sortyquizz.service.dto.CardDTO;
+import fr.sortyquizz.service.dto.FinishStep2DTO;
+import fr.sortyquizz.service.dto.UserPackDTO;
+import fr.sortyquizz.service.dto.enumeration.ResultStep;
 import fr.sortyquizz.service.mapper.CardMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link Card}.
@@ -26,10 +32,12 @@ public class CardService {
     private final CardRepository cardRepository;
 
     private final CardMapper cardMapper;
+    private final UserPackService userPackService;
 
-    public CardService(CardRepository cardRepository, CardMapper cardMapper) {
+    public CardService(CardRepository cardRepository, CardMapper cardMapper, UserPackService userPackService) {
         this.cardRepository = cardRepository;
         this.cardMapper = cardMapper;
+        this.userPackService = userPackService;
     }
 
     /**
@@ -79,5 +87,48 @@ public class CardService {
     public void delete(Long id) {
         log.debug("Request to delete Card : {}", id);
         cardRepository.deleteById(id);
+    }
+
+    /**
+     * Validate the step 2 of the game
+     * We validate that the card or sorted properly
+     *
+     * @param finishStep2DTO containing the list of the cards and the stats.
+     * @return the persisted entity.
+     */
+    public UserPackDTO validateSort(FinishStep2DTO finishStep2DTO, String userLogin) {
+        log.debug("Request to validate sorting of Cards : {}", finishStep2DTO);
+        List<CardDTO> cardsSortedByUser = finishStep2DTO.getCards();
+        CardDTO firstCard = cardsSortedByUser.stream().findFirst().orElseThrow();
+        UserPack loadedPack = userPackService.findByPackIdAndProfileUserLogin(firstCard.getPackId(), userLogin).orElseThrow();
+        loadedPack.setTimeAtSortingStep(finishStep2DTO.getPassedTime());
+        UserPackDTO userPackRefreshed = userPackService.save(loadedPack);
+
+        List<Card> cardsSortedCorrectly = loadedPack.getPack().getCards()
+            .stream()
+            .sorted(Comparator.comparing(Card::getOrder))
+            .collect(Collectors.toList());
+
+        int lifeleft = loadedPack.getLifeLeft();
+        boolean isSortRight = true;
+
+        for (int i = 0; i < cardsSortedByUser.size(); i++) {
+            CardDTO usercard = cardsSortedByUser.get(i);
+            Card correctSortCard = cardsSortedCorrectly.get(i);
+            if (!usercard.getId().equals(correctSortCard.getId())) {
+                isSortRight = false;
+                break;
+            }
+        }
+
+        if (isSortRight) {
+            userPackRefreshed.setResultStep(ResultStep.SUCCEED);
+        } else if (lifeleft - 1 > 0) {
+            userPackRefreshed.setResultStep(ResultStep.FAIL_WITH_LIFE);
+        } else {
+            userPackRefreshed.setResultStep(ResultStep.FAIL_WITHOUT_LIFE);
+        }
+
+        return userPackRefreshed;
     }
 }

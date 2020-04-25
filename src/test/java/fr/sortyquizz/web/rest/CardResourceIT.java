@@ -1,12 +1,16 @@
 package fr.sortyquizz.web.rest;
 
+import fr.sortyquizz.DBClearer;
 import fr.sortyquizz.SortyquizzApp;
-import fr.sortyquizz.domain.Card;
+import fr.sortyquizz.domain.*;
+import fr.sortyquizz.domain.enumeration.SortingType;
+import fr.sortyquizz.domain.enumeration.ValueType;
 import fr.sortyquizz.repository.CardRepository;
 import fr.sortyquizz.service.CardService;
 import fr.sortyquizz.service.dto.CardDTO;
+import fr.sortyquizz.service.dto.FinishStep2DTO;
+import fr.sortyquizz.service.dto.enumeration.ResultStep;
 import fr.sortyquizz.service.mapper.CardMapper;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +21,17 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
+
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import fr.sortyquizz.domain.enumeration.ValueType;
-import fr.sortyquizz.domain.enumeration.SortingType;
 /**
  * Integration tests for the {@link CardResource} REST controller.
  */
@@ -73,9 +78,12 @@ public class CardResourceIT {
 
     private Card card;
 
+    @Autowired
+    private DBClearer dbClearer;
+
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -90,9 +98,10 @@ public class CardResourceIT {
             .order(DEFAULT_ORDER);
         return card;
     }
+
     /**
      * Create an updated entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -111,6 +120,7 @@ public class CardResourceIT {
     @BeforeEach
     public void initTest() {
         card = createEntity(em);
+        dbClearer.clearAllTables();
     }
 
     @Test
@@ -254,7 +264,7 @@ public class CardResourceIT {
             .andExpect(jsonPath("$.[*].sortingType").value(hasItem(DEFAULT_SORTING_TYPE.toString())))
             .andExpect(jsonPath("$.[*].order").value(hasItem(DEFAULT_ORDER)));
     }
-    
+
     @Test
     @Transactional
     public void getCard() throws Exception {
@@ -358,5 +368,109 @@ public class CardResourceIT {
         // Validate the database contains one less item
         List<Card> cardList = cardRepository.findAll();
         assertThat(cardList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(value = "sorter-user")
+    public void validateSortShouldWorkFailWithLife() throws Exception {
+        List<CardDTO> cardDTOS = initBasicData(2, 3, 1, 2);
+        FinishStep2DTO finishStep2DTO = new FinishStep2DTO();
+        finishStep2DTO.setCards(cardDTOS);
+        finishStep2DTO.setNbCards(cardDTOS.size());
+        finishStep2DTO.setPassedTime(20);
+
+        restCardMockMvc.perform(post("/api/cards/validate-sort")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(finishStep2DTO)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").isNotEmpty())
+            .andExpect(jsonPath("$.resultStep").value(ResultStep.FAIL_WITH_LIFE.toString()));
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(value = "sorter-user")
+    public void validateSortShouldWorkSucessSort() throws Exception {
+        List<CardDTO> cardDTOS = initBasicData(2, 1, 2, 3);
+        FinishStep2DTO finishStep2DTO = new FinishStep2DTO();
+        finishStep2DTO.setCards(cardDTOS);
+        finishStep2DTO.setNbCards(cardDTOS.size());
+        finishStep2DTO.setPassedTime(20);
+
+        restCardMockMvc.perform(post("/api/cards/validate-sort")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(finishStep2DTO)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").isNotEmpty())
+            .andExpect(jsonPath("$.resultStep").value(ResultStep.SUCCEED.toString()));
+    }
+
+
+    @Test
+    @Transactional
+    @WithMockUser(value = "sorter-user")
+    public void validateSortShouldWorkFailWithoutLife() throws Exception {
+        List<CardDTO> cardDTOS = initBasicData(1, 3, 2, 1);
+        FinishStep2DTO finishStep2DTO = new FinishStep2DTO();
+        finishStep2DTO.setCards(cardDTOS);
+        finishStep2DTO.setNbCards(cardDTOS.size());
+        finishStep2DTO.setPassedTime(20);
+
+        restCardMockMvc.perform(post("/api/cards/validate-sort")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(finishStep2DTO)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").isNotEmpty())
+            .andExpect(jsonPath("$.resultStep").value(ResultStep.FAIL_WITHOUT_LIFE.toString()));
+    }
+
+    public List<CardDTO> initBasicData(int lifeLeft, int orderCard1, int orderCard2, int orderCard3) {
+        User newUser = UserResourceIT.createEntity(em);
+        newUser.setLogin("sorter-user");
+        em.persist(newUser);
+
+        Theme newTheme = ThemeResourceIT.createEntity(em);
+        em.persist(newTheme);
+
+        Pack newPack = PackResourceIT.createEntity(em);
+        newPack.setTheme(newTheme);
+        em.persist(newPack);
+
+        Profile newProfile = ProfileResourceIT.createEntity(em);
+        newProfile.setUser(newUser);
+
+        em.persist(newProfile);
+
+        UserPack userPack = UserPackResourceIT.createEntity(em);
+
+        userPack.setPack(newPack);
+        userPack.setLifeLeft(lifeLeft);
+        newProfile.addUserPack(userPack);
+        userPack.setProfile(newProfile);
+
+        em.persist(newProfile);
+        em.persist(userPack);
+
+        Card card1 = createEntity(em);
+        card1.setOrder(orderCard1);
+        Card card2 = createEntity(em);
+        card2.setOrder(orderCard2);
+        Card card3 = createEntity(em);
+        card3.setOrder(orderCard3);
+
+        card1.setPack(newPack);
+        card2.setPack(newPack);
+        card3.setPack(newPack);
+        newPack.addCard(card1);
+        newPack.addCard(card2);
+        newPack.addCard(card3);
+
+        em.persist(card1);
+        em.persist(card2);
+        em.persist(card3);
+        em.persist(newPack);
+
+        return Stream.of(card1, card2, card3).map(cardMapper::toDto).collect(Collectors.toList());
     }
 }

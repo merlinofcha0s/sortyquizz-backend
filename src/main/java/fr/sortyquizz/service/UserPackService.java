@@ -3,7 +3,7 @@ package fr.sortyquizz.service;
 import fr.sortyquizz.domain.UserPack;
 import fr.sortyquizz.repository.UserPackRepository;
 import fr.sortyquizz.service.dto.UserPackDTO;
-import fr.sortyquizz.service.dto.enumeration.ResultStep1;
+import fr.sortyquizz.service.dto.enumeration.ResultStep;
 import fr.sortyquizz.service.mapper.UserPackMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,9 +144,9 @@ public class UserPackService {
         log.debug("Request to get UserPack for the connected user : {}", userLogin);
         Optional<UserPack> packToComplete = userPackRepository.findByPackIdAndProfileUserLogin(userPackDTO.getPackId(), userLogin);
         if (packToComplete.isPresent()) {
-            if (userPackDTO.getResultStep1() == ResultStep1.FAIL_WITH_LIFE) {
+            if (userPackDTO.getResultStep() == ResultStep.FAIL_WITH_LIFE) {
                 packToComplete.get().setLifeLeft(packToComplete.get().getLifeLeft() - 1);
-            } else if (userPackDTO.getResultStep1() == ResultStep1.SUCCEED) {
+            } else if (userPackDTO.getResultStep() == ResultStep.SUCCEED) {
                 packToComplete.get().setNbQuestionsToSucceed(userPackDTO.getNbQuestionsToSucceed());
                 packToComplete.get().setTimeAtQuizzStep(userPackDTO.getTimeAtQuizzStep());
             } else {
@@ -155,7 +155,7 @@ public class UserPackService {
 
             UserPack save = userPackRepository.save(packToComplete.get());
             UserPackDTO userPackDTOUpdated = userPackMapper.toDto(save);
-            userPackDTOUpdated.setResultStep1(userPackDTO.getResultStep1());
+            userPackDTOUpdated.setResultStep(userPackDTO.getResultStep());
             return Optional.of(userPackDTOUpdated);
         } else {
             return Optional.empty();
@@ -194,5 +194,14 @@ public class UserPackService {
             userPackByIdAndLogin.get().setLifeLeft(0);
             userPackRepository.save(userPackByIdAndLogin.get());
         }
+    }
+
+    public Optional<UserPack> findByPackIdAndProfileUserLogin(Long userPackId, String userLogin){
+        return userPackRepository.findByPackIdAndProfileUserLogin(userPackId, userLogin);
+    }
+
+    public UserPackDTO save(UserPack userPack){
+        UserPack userPackRefreshed = userPackRepository.save(userPack);
+        return userPackMapper.toDto(userPackRefreshed);
     }
 }

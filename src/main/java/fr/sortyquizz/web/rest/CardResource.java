@@ -1,9 +1,11 @@
 package fr.sortyquizz.web.rest;
 
+import fr.sortyquizz.security.SecurityUtils;
 import fr.sortyquizz.service.CardService;
-import fr.sortyquizz.web.rest.errors.BadRequestAlertException;
 import fr.sortyquizz.service.dto.CardDTO;
-
+import fr.sortyquizz.service.dto.FinishStep2DTO;
+import fr.sortyquizz.service.dto.UserPackDTO;
+import fr.sortyquizz.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -13,10 +15,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -122,5 +123,20 @@ public class CardResource {
         log.debug("REST request to delete Card : {}", id);
         cardService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+    }
+
+
+    /**
+     * {@code POST  /cards/validate-sort} : Validate the step 2 of the game
+     *
+     * @param finishStep2DTO the stats + the list of the cards.
+     * @return the {@link ResponseEntity} with status {@code 200 (Created)} and with body the refreshed UserPackDTO.
+     */
+    @PostMapping("/cards/validate-sort")
+    public ResponseEntity<UserPackDTO> validateSort(@RequestBody FinishStep2DTO finishStep2DTO) {
+        log.debug("REST request to validate sort card (step 2) : {}", finishStep2DTO);
+        String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new AccountResource.AccountResourceException("Current user login not found"));
+        UserPackDTO result = cardService.validateSort(finishStep2DTO, userLogin);
+        return ResponseEntity.ok().body(result);
     }
 }
