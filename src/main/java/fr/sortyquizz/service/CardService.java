@@ -2,6 +2,7 @@ package fr.sortyquizz.service;
 
 import fr.sortyquizz.domain.Card;
 import fr.sortyquizz.domain.UserPack;
+import fr.sortyquizz.domain.enumeration.PackState;
 import fr.sortyquizz.repository.CardRepository;
 import fr.sortyquizz.service.dto.CardDTO;
 import fr.sortyquizz.service.dto.FinishStep2DTO;
@@ -122,6 +123,8 @@ public class CardService {
         }
 
         if (isSortRight) {
+            loadedPack.setState(PackState.COMPLETED);
+            userPackRefreshed = userPackService.save(loadedPack);
             userPackRefreshed.setResultStep(ResultStep.SUCCEED);
         } else if (lifeleft - 1 > 0) {
             userPackRefreshed.setResultStep(ResultStep.FAIL_WITH_LIFE);

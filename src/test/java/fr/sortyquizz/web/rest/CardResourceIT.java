@@ -3,9 +3,11 @@ package fr.sortyquizz.web.rest;
 import fr.sortyquizz.DBClearer;
 import fr.sortyquizz.SortyquizzApp;
 import fr.sortyquizz.domain.*;
+import fr.sortyquizz.domain.enumeration.PackState;
 import fr.sortyquizz.domain.enumeration.SortingType;
 import fr.sortyquizz.domain.enumeration.ValueType;
 import fr.sortyquizz.repository.CardRepository;
+import fr.sortyquizz.repository.UserPackRepository;
 import fr.sortyquizz.service.CardService;
 import fr.sortyquizz.service.dto.CardDTO;
 import fr.sortyquizz.service.dto.FinishStep2DTO;
@@ -24,6 +26,7 @@ import org.springframework.util.Base64Utils;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -80,6 +83,9 @@ public class CardResourceIT {
 
     @Autowired
     private DBClearer dbClearer;
+
+    @Autowired
+    private UserPackRepository userPackRepository;
 
     /**
      * Create an entity for this test.
@@ -391,7 +397,7 @@ public class CardResourceIT {
     @Test
     @Transactional
     @WithMockUser(value = "sorter-user")
-    public void validateSortShouldWorkSucessSort() throws Exception {
+    public void validateSortShouldWorkSuccessSort() throws Exception {
         List<CardDTO> cardDTOS = initBasicData(2, 1, 2, 3);
         FinishStep2DTO finishStep2DTO = new FinishStep2DTO();
         finishStep2DTO.setCards(cardDTOS);
@@ -404,6 +410,12 @@ public class CardResourceIT {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").isNotEmpty())
             .andExpect(jsonPath("$.resultStep").value(ResultStep.SUCCEED.toString()));
+
+        Optional<CardDTO> firstCards = cardDTOS.stream().findFirst();
+        assertThat(firstCards).isPresent();
+        Optional<UserPack> userPackToVerify = userPackRepository.findByPackIdAndProfileUserLogin(firstCards.get().getPackId(), "sorter-user");
+        assertThat(userPackToVerify).isPresent();
+        assertThat(userPackToVerify.get().getState()).isEqualTo(PackState.COMPLETED);
     }
 
 
