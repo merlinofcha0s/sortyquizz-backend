@@ -6,7 +6,6 @@ import fr.sortyquizz.service.dto.QuestionDTO;
 import fr.sortyquizz.service.mapper.QuestionMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +43,17 @@ public class QuestionService {
         Question question = questionMapper.toEntity(questionDTO);
         question = questionRepository.save(question);
         return questionMapper.toDto(question);
+    }
+
+    /**
+     * Save a question entity.
+     *
+     * @param question the entity to save.
+     * @return the persisted entity.
+     */
+    public Question save(Question question) {
+        log.debug("Request to save Question entity : {}", question);
+        return questionRepository.save(question);
     }
 
     /**

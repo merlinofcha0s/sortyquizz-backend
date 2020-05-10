@@ -6,7 +6,6 @@ import fr.sortyquizz.service.dto.AnswerDTO;
 import fr.sortyquizz.service.mapper.AnswerMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -43,6 +42,17 @@ public class AnswerService {
         Answer answer = answerMapper.toEntity(answerDTO);
         answer = answerRepository.save(answer);
         return answerMapper.toDto(answer);
+    }
+
+    /**
+     * Save a answer entity.
+     *
+     * @param answer the entity to save.
+     * @return the persisted entity.
+     */
+    public Answer save(Answer answer) {
+        log.debug("Request to save Answer : {}", answer);
+        return answerRepository.save(answer);
     }
 
     /**

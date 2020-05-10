@@ -1,8 +1,8 @@
 package fr.sortyquizz.config;
 
-import fr.sortyquizz.security.*;
-import fr.sortyquizz.security.jwt.*;
-
+import fr.sortyquizz.security.AuthoritiesConstants;
+import fr.sortyquizz.security.jwt.JWTConfigurer;
+import fr.sortyquizz.security.jwt.TokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
@@ -83,6 +83,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/account/reset-password/init").permitAll()
             .antMatchers("/api/account/reset-password/finish").permitAll()
             .antMatchers("/api/questions/start/*").permitAll()
+            .antMatchers("/api/openquizz/import-quizz").permitAll()
             .antMatchers("/api/**").authenticated()
             .antMatchers("/management/health").permitAll()
             .antMatchers("/management/info").permitAll()

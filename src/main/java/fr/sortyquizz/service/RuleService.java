@@ -6,7 +6,6 @@ import fr.sortyquizz.service.dto.RuleDTO;
 import fr.sortyquizz.service.mapper.RuleMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -43,6 +42,17 @@ public class RuleService {
         Rule rule = ruleMapper.toEntity(ruleDTO);
         rule = ruleRepository.save(rule);
         return ruleMapper.toDto(rule);
+    }
+
+    /**
+     * Save a rule entity.
+     *
+     * @param rule the entity to save.
+     * @return the persisted entity.
+     */
+    public Rule save(Rule rule) {
+        log.debug("Request to save Rule entity : {}", rule);
+        return ruleRepository.save(rule);
     }
 
     /**

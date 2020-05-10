@@ -6,7 +6,6 @@ import fr.sortyquizz.service.dto.ThemeDTO;
 import fr.sortyquizz.service.mapper.ThemeMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -43,6 +42,17 @@ public class ThemeService {
         Theme theme = themeMapper.toEntity(themeDTO);
         theme = themeRepository.save(theme);
         return themeMapper.toDto(theme);
+    }
+
+    /**
+     * Save a theme entity.
+     *
+     * @param theme the entity to save.
+     * @return the persisted entity.
+     */
+    public Theme save(Theme theme) {
+        log.debug("Request to save Theme : {}", theme);
+        return themeRepository.save(theme);
     }
 
     /**

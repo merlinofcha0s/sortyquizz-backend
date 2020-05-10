@@ -54,6 +54,17 @@ public class PackService {
     }
 
     /**
+     * Save a pack entity.
+     *
+     * @param pack the entity to save.
+     * @return the persisted entity.
+     */
+    public Pack save(Pack pack) {
+        log.debug("Request to save Pack entity : {}", pack);
+        return packRepository.save(pack);
+    }
+
+    /**
      * Get all the packs.
      *
      * @param pageable the pagination information.
