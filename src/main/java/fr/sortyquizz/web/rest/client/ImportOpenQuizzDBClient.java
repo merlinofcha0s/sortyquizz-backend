@@ -10,7 +10,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -38,7 +37,7 @@ public class ImportOpenQuizzDBClient {
         this.restTemplate = restTemplate;
     }
 
-    @Scheduled(initialDelay = 2000, fixedDelay = 30000000)
+//    @Scheduled(initialDelay = 2000, fixedDelay = 30000000)
     public void importQuizzData() {
         try {
             List<String> urls = extractURLFromCSV();
