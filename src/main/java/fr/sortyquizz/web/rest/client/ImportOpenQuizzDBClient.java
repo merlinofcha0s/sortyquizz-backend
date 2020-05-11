@@ -1,9 +1,16 @@
 package fr.sortyquizz.web.rest.client;
 
 import fr.sortyquizz.service.dto.imports.openquizzdb.ThemeQuizzDBDTO;
+import fr.sortyquizz.web.rest.vm.JWTToken;
+import fr.sortyquizz.web.rest.vm.LoginVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -23,18 +30,25 @@ public class ImportOpenQuizzDBClient {
 
     private final RestTemplate restTemplate;
 
+    private JWTToken token;
+
+    private final String baseURL = "http://127.0.0.1:8080";
+
     public ImportOpenQuizzDBClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
-//    @Scheduled(initialDelay = 2000, fixedDelay = 30000000)
+    @Scheduled(initialDelay = 2000, fixedDelay = 30000000)
     public void importQuizzData() {
         try {
             List<String> urls = extractURLFromCSV();
             List<ThemeQuizzDBDTO> quizzToImport = urls.parallelStream().map(this::callOpenDB)
                 .filter(themeQuizzDBDTO -> !Objects.isNull(themeQuizzDBDTO))
                 .collect(Collectors.toList());
-            quizzToImport.forEach(this::saveNewPack);
+            token = login("admin", "admin");
+            if(token != null){
+                quizzToImport.forEach(this::saveNewPack);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -42,13 +56,24 @@ public class ImportOpenQuizzDBClient {
 
     private Boolean saveNewPack(ThemeQuizzDBDTO themeQuizzDBDTO) {
         try {
-            Boolean success = restTemplate.postForObject("http://127.0.0.1:8080/api/openquizz/import-quizz", themeQuizzDBDTO, Boolean.class);
-            log.debug("success for the pack {}  ??? {}", themeQuizzDBDTO.getTheme(), success);
-            return success;
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(token.getIdToken());
+            HttpEntity<ThemeQuizzDBDTO> entity = new HttpEntity<>(themeQuizzDBDTO, headers);
+
+            ResponseEntity<Boolean> requestSuccess = restTemplate.exchange(baseURL + "/api/openquizz/import-quizz", HttpMethod.POST, entity, Boolean.class);
+            log.debug("success for the pack {}  ??? {}", themeQuizzDBDTO.getTheme(), requestSuccess.getBody());
+            return requestSuccess.getBody();
         } catch (HttpClientErrorException hcee) {
             log.error("Problem when import to WS for {}", themeQuizzDBDTO.getUrl());
             return false;
         }
+    }
+
+    private JWTToken login(String username, String password) {
+        LoginVM loginVM = new LoginVM();
+        loginVM.setUsername(username);
+        loginVM.setPassword(password);
+        return restTemplate.postForObject(baseURL + "/api/authenticate", loginVM, JWTToken.class);
     }
 
     private ThemeQuizzDBDTO callOpenDB(String url) {
