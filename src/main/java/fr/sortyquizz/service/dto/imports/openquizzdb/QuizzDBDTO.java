@@ -10,10 +10,10 @@ import java.util.Objects;
 public class QuizzDBDTO implements Serializable {
 
     @JsonProperty("fr")
-    private LocalizedQuizzDB localizedQuizzDBFR ;
+    private List<LocalizedQuizzDB> localizedQuizzDBFR ;
 
     @JsonProperty("en")
-    private LocalizedQuizzDB localizedQuizzDBEN;
+    private List<LocalizedQuizzDB> localizedQuizzDBEN;
 
     @JsonProperty("débutant")
     private List<QuestionOpenDB> debutant = new ArrayList<>();
@@ -24,19 +24,19 @@ public class QuizzDBDTO implements Serializable {
     @JsonProperty("expert")
     private List<QuestionOpenDB> expert = new ArrayList<>();
 
-    public LocalizedQuizzDB getLocalizedQuizzDBFR() {
+    public List<LocalizedQuizzDB> getLocalizedQuizzDBFR() {
         return localizedQuizzDBFR;
     }
 
-    public void setLocalizedQuizzDBFR(LocalizedQuizzDB localizedQuizzDBFR) {
+    public void setLocalizedQuizzDBFR(List<LocalizedQuizzDB> localizedQuizzDBFR) {
         this.localizedQuizzDBFR = localizedQuizzDBFR;
     }
 
-    public LocalizedQuizzDB getLocalizedQuizzDBEN() {
+    public List<LocalizedQuizzDB> getLocalizedQuizzDBEN() {
         return localizedQuizzDBEN;
     }
 
-    public void setLocalizedQuizzDBEN(LocalizedQuizzDB localizedQuizzDBEN) {
+    public void setLocalizedQuizzDBEN(List<LocalizedQuizzDB> localizedQuizzDBEN) {
         this.localizedQuizzDBEN = localizedQuizzDBEN;
     }
 

@@ -1,7 +1,10 @@
 package fr.sortyquizz.service;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import fr.sortyquizz.domain.UserPack;
 import fr.sortyquizz.repository.UserPackRepository;
+import fr.sortyquizz.service.dto.QuestionDTO;
 import fr.sortyquizz.service.dto.UserPackDTO;
 import fr.sortyquizz.service.dto.enumeration.ResultStep;
 import fr.sortyquizz.service.mapper.UserPackMapper;
@@ -14,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -131,7 +135,13 @@ public class UserPackService {
     @Transactional(readOnly = true)
     public Optional<UserPackDTO> getByIdAndUserLoginDTO(Long id, String userLogin) {
         log.debug("Request to get UserPack for the connected user : {}", userLogin);
-        return userPackRepository.findByIdAndProfileUserLogin(id, userLogin).map(userPackMapper::toDto);
+        Optional<UserPackDTO> userPackDTO = userPackRepository.findByIdAndProfileUserLogin(id, userLogin).map(userPackMapper::toDto);
+        if (userPackDTO.isPresent()) {
+            Set<QuestionDTO> questions = ImmutableSet.copyOf(Iterables.limit(userPackDTO.get().getPack().getQuestions(),
+                userPackDTO.get().getPack().getRule().getNbMaxQuestions()));
+            userPackDTO.get().getPack().setQuestions(questions);
+        }
+        return userPackDTO;
     }
 
     /**
@@ -196,11 +206,11 @@ public class UserPackService {
         }
     }
 
-    public Optional<UserPack> findByPackIdAndProfileUserLogin(Long userPackId, String userLogin){
+    public Optional<UserPack> findByPackIdAndProfileUserLogin(Long userPackId, String userLogin) {
         return userPackRepository.findByPackIdAndProfileUserLogin(userPackId, userLogin);
     }
 
-    public UserPackDTO save(UserPack userPack){
+    public UserPackDTO save(UserPack userPack) {
         UserPack userPackRefreshed = userPackRepository.save(userPack);
         return userPackMapper.toDto(userPackRefreshed);
     }

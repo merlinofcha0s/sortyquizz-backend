@@ -52,24 +52,25 @@ public class OpenQuizzDBService {
             importPack(newTheme, themeQuizzDBDTO.getQuizzDBDTO().getExpert(), LevelOpenDB.EXPERT);
         }
 
-        importByLocalizedPack(themeQuizzDBDTO.getQuizzDBDTO().getLocalizedQuizzDBEN(), newTheme);
+//        importByLocalizedPack(themeQuizzDBDTO.getQuizzDBDTO().getLocalizedQuizzDBEN(), newTheme);
         importByLocalizedPack(themeQuizzDBDTO.getQuizzDBDTO().getLocalizedQuizzDBFR(), newTheme);
 
         return true;
     }
 
-    private void importByLocalizedPack(LocalizedQuizzDB localizedQuizzDB, Theme newTheme) {
+    private void importByLocalizedPack(List<LocalizedQuizzDB> localizedQuizzDB, Theme newTheme) {
         if (localizedQuizzDB != null) {
-            if (!localizedQuizzDB.getDebutant().isEmpty()) {
-                importPack(newTheme, localizedQuizzDB.getDebutant(), LevelOpenDB.BEGINNER);
+            LocalizedQuizzDB localizedQuizzDB1 = localizedQuizzDB.stream().findFirst().get();
+            if (!localizedQuizzDB1.getDebutant().isEmpty()) {
+                importPack(newTheme, localizedQuizzDB1.getDebutant(), LevelOpenDB.BEGINNER);
             }
 
-            if (!localizedQuizzDB.getConfirme().isEmpty()) {
-                importPack(newTheme, localizedQuizzDB.getConfirme(), LevelOpenDB.INTERMEDIATE);
+            if (!localizedQuizzDB1.getConfirme().isEmpty()) {
+                importPack(newTheme, localizedQuizzDB1.getConfirme(), LevelOpenDB.INTERMEDIATE);
             }
 
-            if (!localizedQuizzDB.getExpert().isEmpty()) {
-                importPack(newTheme, localizedQuizzDB.getExpert(), LevelOpenDB.EXPERT);
+            if (!localizedQuizzDB1.getExpert().isEmpty()) {
+                importPack(newTheme, localizedQuizzDB1.getExpert(), LevelOpenDB.EXPERT);
             }
         }
     }

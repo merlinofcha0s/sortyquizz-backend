@@ -7,6 +7,8 @@ import java.util.Objects;
 
 public class ThemeQuizzDBDTO implements Serializable {
 
+    private String url;
+
     @JsonProperty("thème")
     private String theme;
 
@@ -27,6 +29,14 @@ public class ThemeQuizzDBDTO implements Serializable {
 
     public void setQuizzDBDTO(QuizzDBDTO quizzDBDTO) {
         this.quizzDBDTO = quizzDBDTO;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     @Override
