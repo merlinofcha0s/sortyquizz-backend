@@ -43,10 +43,10 @@ public class ImportOpenQuizzDBClient {
         try {
             List<String> urls = extractURLFromCSV();
             List<ThemeQuizzDBDTO> quizzToImport = urls.parallelStream().map(this::callOpenDB)
-                .filter(themeQuizzDBDTO -> !Objects.isNull(themeQuizzDBDTO))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
             token = login("admin", "admin");
-            if(token != null){
+            if (token != null) {
                 quizzToImport.forEach(this::saveNewPack);
             }
         } catch (IOException e) {

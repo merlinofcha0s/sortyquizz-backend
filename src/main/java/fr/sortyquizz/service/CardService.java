@@ -55,6 +55,18 @@ public class CardService {
     }
 
     /**
+     * Save a card.
+     *
+     * @param cardDTO the entity to save.
+     * @return the persisted entity.
+     */
+    public Card saveAndReturnEntity(CardDTO cardDTO) {
+        log.debug("Request to save Card : {}", cardDTO);
+        Card card = cardMapper.toEntity(cardDTO);
+        return cardRepository.save(card);
+    }
+
+    /**
      * Get all the cards.
      *
      * @param pageable the pagination information.
@@ -88,6 +100,19 @@ public class CardService {
     public void delete(Long id) {
         log.debug("Request to delete Card : {}", id);
         cardRepository.deleteById(id);
+    }
+
+    /**
+     * get a list of cards by pack id.
+     *
+     * @param packId the id of the pack.
+     */
+    public List<CardDTO> getByPackId(Long packId) {
+        log.debug("Request to get Card by packID : {}", packId);
+        return cardRepository.findByPackId(packId)
+            .stream()
+            .map(cardMapper::toDto)
+            .collect(Collectors.toList());
     }
 
     /**

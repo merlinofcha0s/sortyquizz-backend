@@ -3,6 +3,9 @@ package fr.sortyquizz.service;
 import fr.sortyquizz.domain.*;
 import fr.sortyquizz.domain.enumeration.PackType;
 import fr.sortyquizz.domain.enumeration.QuestionType;
+import fr.sortyquizz.domain.enumeration.SortingType;
+import fr.sortyquizz.domain.enumeration.ValueType;
+import fr.sortyquizz.service.dto.CardDTO;
 import fr.sortyquizz.service.dto.imports.openquizzdb.LevelOpenDB;
 import fr.sortyquizz.service.dto.imports.openquizzdb.LocalizedQuizzDB;
 import fr.sortyquizz.service.dto.imports.openquizzdb.QuestionOpenDB;
@@ -22,17 +25,20 @@ public class OpenQuizzDBService {
     private final AnswerService answerService;
     private final RuleService ruleService;
     private final ThemeService themeService;
+    private final CardService cardService;
 
     public OpenQuizzDBService(PackService packService,
                               QuestionService questionService,
                               AnswerService answerService,
                               RuleService ruleService,
-                              ThemeService themeService) {
+                              ThemeService themeService,
+                              CardService cardService) {
         this.packService = packService;
         this.questionService = questionService;
         this.answerService = answerService;
         this.ruleService = ruleService;
         this.themeService = themeService;
+        this.cardService = cardService;
     }
 
     @Transactional
@@ -75,7 +81,7 @@ public class OpenQuizzDBService {
         }
     }
 
-    private void importPack(Theme newTheme, List<QuestionOpenDB> questionOpenDBS,LevelOpenDB levelOpenDB) {
+    private void importPack(Theme newTheme, List<QuestionOpenDB> questionOpenDBS, LevelOpenDB levelOpenDB) {
         Pack newPack = new Pack().theme(newTheme)
             .level(LevelOpenDB.BEGINNER.ordinal() + 1)
             .life(10)
@@ -96,8 +102,21 @@ public class OpenQuizzDBService {
             .timePerQuestion(15);
 
         Rule ruleSaved = ruleService.save(rule);
-
         newPack.setRule(ruleSaved);
+
+        List<CardDTO> cardsToAdd = cardService.getByPackId(1L);
+        for (int i = 0; i < cardsToAdd.size(); i++) {
+            CardDTO cardDTO = cardsToAdd.get(i);
+            cardDTO.setId(null);
+            cardDTO.setPackId(newPack.getId());
+            cardDTO.setOrder(i + 1);
+            cardDTO.setSortingType(SortingType.NATURAL);
+            cardDTO.setValueType(ValueType.STRING);
+            cardDTO.setDisplay((i + 1) + "-" + cardDTO.getDisplay());
+            Card card = cardService.saveAndReturnEntity(cardDTO);
+            newPack.addCard(card);
+        }
+        packService.save(newPack);
     }
 
 
